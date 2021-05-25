@@ -1,0 +1,3 @@
+primary color green: 1A936F
+primary color dark: 114B5F
+secodary: F3E9D2 
