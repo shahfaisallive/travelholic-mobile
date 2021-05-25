@@ -6,6 +6,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 // Importing screens
 import Destinations from "../screens/destinations/DestinationsScreen"
+import DestinationDetails from "../screens/destinations/DestinationDetailsScreen"
 
 // Importing components
 import { Icon } from 'react-native-elements/dist/icons/Icon';
@@ -35,6 +36,14 @@ const DestinationsStackNavigation = ({ navigation }) => {
                         style={styles.menuIcon} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
                         <Icon name='menu' color='white' size={28} />
                     </TouchableOpacity>
+                }}
+            />
+
+            <Stack.Screen
+                name="DestinationDetails"
+                component={DestinationDetails}
+                options={{
+                    title: 'Details'
                 }}
             />
 

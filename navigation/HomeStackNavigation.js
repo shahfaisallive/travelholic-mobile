@@ -26,8 +26,7 @@ const HomeStackNavigation = ({ navigation }) => {
                     backgroundColor: '#114B5F',
                 },
                 headerTintColor: 'white',
-                headerTitleAlign: 'center',
-
+                headerTitleAlign: 'center'
             }}
         >
             <Stack.Screen
@@ -41,7 +40,7 @@ const HomeStackNavigation = ({ navigation }) => {
                     </TouchableOpacity>
                 }}
             />
-            <Stack.Screen
+            {/* <Stack.Screen
                 name="BookATrip"
                 component={BookATrip}
                 options={{ title: 'Trips' }}
@@ -55,7 +54,7 @@ const HomeStackNavigation = ({ navigation }) => {
                 name="Destinations"
                 component={Destinations}
                 options={{ title: 'Destinations' }}
-            />
+            /> */}
 
         </Stack.Navigator>
     )

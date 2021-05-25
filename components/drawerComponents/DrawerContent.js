@@ -15,7 +15,7 @@ const DrawerContent = (props) => {
                             style={styles.logo}
                         />
                     </View>
-                    <View style={{flexDirection: 'column'}}>
+                    <View style={{ flexDirection: 'column' }}>
                         <Title style={styles.title}>Shah Faisal</Title>
                         <Caption style={styles.caption}>@shahfaisallive</Caption>
                     </View>
@@ -25,38 +25,38 @@ const DrawerContent = (props) => {
                     <DrawerItem
                         icon={() => (
                             <Icon
-                             name="account-circle"
+                                name="account-circle" color='#114B5F'
                             />
                         )}
-                        label="Profile"
-                        onPress={() => {props.navigation.navigate("Profile")}}
+                        label="Profile" inactiveTintColor='#114B5F'
+                        onPress={() => { props.navigation.navigate("Profile") }}
                     />
                     <DrawerItem
                         icon={() => (
                             <Icon
-                             name="group"
+                                name="group" color='#114B5F'
                             />
                         )}
-                        label="About us"
-                        onPress={() => {props.navigation.navigate("About")}}
+                        label="About us" inactiveTintColor='#114B5F'
+                        onPress={() => { props.navigation.navigate("About") }}
                     />
                     <DrawerItem
                         icon={() => (
                             <Icon
-                             name="feedback"
+                                name="feedback" color='#114B5F'
                             />
                         )}
-                        label="Feedback"
-                        onPress={() => {props.navigation.navigate("Feedback")}}
+                        label="Feedback" inactiveTintColor='#114B5F'
+                        onPress={() => { props.navigation.navigate("Feedback") }}
                     />
                     <DrawerItem
                         icon={() => (
                             <Icon
-                             name="login"
+                                name="login" color='#114B5F'
                             />
                         )}
-                        label="Login"
-                        onPress={() => {props.navigation.navigate("Login")}}
+                        label="Login" inactiveTintColor='#114B5F'
+                        onPress={() => { props.navigation.navigate("Login") }}
                     />
                 </Drawer.Section>
             </DrawerContentScrollView>
@@ -64,17 +64,17 @@ const DrawerContent = (props) => {
             <Drawer.Section style={styles.bottomDrawerSection} >
                 <DrawerItem
                     icon={() => (
-                        <Icon name='settings' />
+                        <Icon name='settings' color='#114B5F' />
                     )}
-                    label="Settings"
+                    label="Settings" inactiveTintColor='#114B5F'
                     onPress={() => { }}
                 />
                 <DrawerItem
                     icon={() => (
-                        <Icon name='logout' />
+                        <Icon name='logout' color='#114B5F' />
                     )}
-                    label="Log out"
-                    onPress={() => {props.navigation.navigate("Register")}}
+                    label="Log out" inactiveTintColor='#114B5F'
+                    onPress={() => { props.navigation.navigate("Register") }}
                 />
             </Drawer.Section>
         </View>
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
         lineHeight: 13,
         color: '#dcd1cb',
         textAlign: 'center',
-    }
+    },
 })
 
 

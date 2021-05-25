@@ -1,5 +1,8 @@
 import React from 'react'
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
+import { TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements/dist/icons/Icon';
+
 
 // Importing Screens and components
 import Register from "../screens/authentication/RegisterScreen"
@@ -16,20 +19,30 @@ import TabNavigation from "./TabNavigation"
 const Drawer = createDrawerNavigator();
 
 
-const DrawerNavigation = () => {
+const DrawerNavigation = ({ navigation }) => {
+    const homeButton = () => <TouchableOpacity
+        onPress={() => {}}>
+        <Icon name='home' color='white' size={26} style={{ marginRight: 10 }} />
+    </TouchableOpacity>
+
     return (
         <Drawer.Navigator
             drawerType='slide'
-            edgeWidth = {200}
-            drawerContent={props => <DrawerContent {...props} /> }
+            edgeWidth={100}
+            drawerContent={props => <DrawerContent {...props} />}
             screenOptions={{}}
         >
             <Drawer.Screen name='Home' component={TabNavigation} />
-            <Drawer.Screen name='Login' component={Login} options={{headerStyle: {backgroundColor: '#114B5F'}, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center'}} />
-            <Drawer.Screen name='Register' component={Register} options={{headerStyle: {backgroundColor: '#114B5F'}, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center'}} />
-            <Drawer.Screen name='Profile' component={Profile} options={{headerStyle: {backgroundColor: '#114B5F'}, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center'}} />
-            <Drawer.Screen name='About' component={About} options={{headerStyle: {backgroundColor: '#114B5F'}, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center'}} />
-            <Drawer.Screen name='Feedback' component={Feedback} options={{headerStyle: {backgroundColor: '#114B5F'}, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center'}} />
+            <Drawer.Screen name='Login' component={Login}
+                options={{ headerStyle: { backgroundColor: '#114B5F' }, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center', headerRight: homeButton }} />
+            <Drawer.Screen name='Register' component={Register}
+                options={{ headerStyle: { backgroundColor: '#114B5F' }, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center', headerRight: homeButton }} />
+            <Drawer.Screen name='Profile' component={Profile}
+                options={{ headerStyle: { backgroundColor: '#114B5F' }, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center', headerRight: homeButton }} />
+            <Drawer.Screen name='About' component={About}
+                options={{ headerStyle: { backgroundColor: '#114B5F' }, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center', headerRight: homeButton }} />
+            <Drawer.Screen name='Feedback' component={Feedback}
+                options={{ headerStyle: { backgroundColor: '#114B5F' }, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center', headerRight: homeButton }} />
 
         </Drawer.Navigator>
     )
