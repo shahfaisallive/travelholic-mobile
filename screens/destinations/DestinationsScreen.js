@@ -1,15 +1,13 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 
 const DestinationsScreen = ({navigation}) => {
     return (
-        <View>
-            <Text>Destinations</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('DestinationDetails')}>
-                <Text>Detials</Text>
-            </TouchableOpacity>
-        </View>
+        <ScrollView>
+            
+        </ScrollView>
     )
 }
+
 
 export default DestinationsScreen

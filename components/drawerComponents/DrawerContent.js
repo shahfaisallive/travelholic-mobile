@@ -56,7 +56,7 @@ const DrawerContent = (props) => {
                             />
                         )}
                         label="Login" inactiveTintColor='#114B5F'
-                        onPress={() => { props.navigation.navigate("Login") }}
+                        onPress={() => { props.navigation.navigate("Authenticate") }}
                     />
                 </Drawer.Section>
             </DrawerContentScrollView>
@@ -74,7 +74,7 @@ const DrawerContent = (props) => {
                         <Icon name='logout' color='#114B5F' />
                     )}
                     label="Log out" inactiveTintColor='#114B5F'
-                    onPress={() => { props.navigation.navigate("Register") }}
+                    onPress={() => { props.navigation.navigate("Authenticate") }}
                 />
             </Drawer.Section>
         </View>
