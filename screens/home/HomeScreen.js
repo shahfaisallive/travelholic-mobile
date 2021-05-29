@@ -5,6 +5,7 @@ import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { SliderBox } from "react-native-image-slider-box";
 
 // Component and screens
+import SearchBar from '../../components/supportComponents/SearchBar';
 
 const HomeScreen = ({ navigation }) => {
     const [images, setImages] = useState([
@@ -26,8 +27,11 @@ const HomeScreen = ({ navigation }) => {
                 />
             </View>
 
+            <SearchBar />
+
             {/*DESTINATIONS SECTION*/}
             <View style={styles.headingView}>
+                <Icon name='landscape' iconStyle={styles.headingIcon} />
                 <Text style={styles.heading1}>Destinations</Text>
             </View>
 
@@ -49,19 +53,18 @@ const HomeScreen = ({ navigation }) => {
                 </Card>
             </ScrollView>
 
-            <View style={styles.headingView}>
+            <View>
                 <TouchableOpacity style={styles.linkBox1}
                     onPress={() => navigation.navigate('Destinations')}>
                     <Text style={styles.linkText1} >View all Destinations</Text>
                 </TouchableOpacity>
             </View>
-            {/* <Divider style={{ backgroundColor: '#114B5F', marginTop: 10 }} /> */}
-
 
             {/* PLAN YOUR JOURNEYS SECTIONS */}
             <View style={styles.headingView}>
-                <Text style={styles.heading1}>Plan your journeys</Text>
-            </View>
+                    <Icon name='event' iconStyle={styles.headingIcon} />
+                    <Text style={styles.heading1}>Plan your Journeys</Text>
+                </View>
             <View>
                 <Card containerStyle={styles.cardContainer1}>
                     <Card.Image source={require("../../assets/images/plannerimage.jpg")} style={styles.planner} />
@@ -73,8 +76,11 @@ const HomeScreen = ({ navigation }) => {
             </View>
 
             {/* BOOK TRIPS SECTION */}
-            <View style={styles.headingView}>
-                <Text style={styles.heading1}>Book your trips</Text>
+            <View style={{}}>
+                <View style={styles.headingView}>
+                    <Icon name='directions-bus' iconStyle={styles.headingIcon} />
+                    <Text style={styles.heading1}>Book a trip</Text>
+                </View>
 
                 <View style={styles.tripSection}>
                     <TouchableOpacity onPress={() => navigation.navigate('BookATrip')} >
@@ -94,13 +100,21 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     heading1: {
-        fontSize: 17,
-        textAlign: 'center',
-        fontWeight: 'bold'
+        fontSize: 21,
+        textAlign: 'center'
+    },
+    headingIcon: {
+        fontSize: 30,
+        marginRight: 5
     },
     headingView: {
-        marginTop: 15,
-        // flexDirection: 'row'
+        marginTop: 20,
+        flexDirection: 'row',
+        marginLeft: 15,
+        marginRight: 15,
+        borderBottomColor: '#114B5F',
+        borderBottomWidth: 1,
+        paddingBottom: 10
     },
     destinationImage: {
         height: 210,
@@ -120,9 +134,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#1A936F',
         paddingTop: 8,
         paddingBottom: 8,
-        width: '95%',
+        width: '93%',
         alignSelf: 'center',
-        borderRadius: 6
+        borderRadius: 6,
+        marginTop: 10
     },
     linkText1: {
         color: 'white',
@@ -146,7 +161,7 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 3,
         borderColor: '#1A936F',
-        width: '95%',
+        width: '93%',
         alignSelf: 'center',
         padding: 30, marginBottom: 20,
         borderRadius: 10
