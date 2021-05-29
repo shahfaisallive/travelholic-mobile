@@ -1,12 +1,14 @@
 import 'react-native-gesture-handler';
 import React from 'react';
+import { Provider } from "react-redux"
+import store from "./store/store"
 
-// Importing App Screens and Components
 import Navigation from './navigation/Navigation';
-
 
 export default function App() {
   return (
-    <Navigation /> 
+    <Provider store={store}>
+      <Navigation />
+    </Provider>
   );
 }
