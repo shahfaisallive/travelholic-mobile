@@ -2,6 +2,9 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { Provider } from "react-redux"
 import store from "./store/store"
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['Reanimated 2']);
 
 import Navigation from './navigation/Navigation';
 

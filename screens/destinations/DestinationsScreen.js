@@ -1,31 +1,46 @@
-import React, { useState } from 'react'
-import { Text, TouchableOpacity, StyleSheet, FlatList, SafeAreaView } from 'react-native'
-import axios from "../../components/supportComponents/axios"
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, FlatList, SafeAreaView, ActivityIndicator } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux';
 
 import DestinationItem from "../../components/destinationComponents/DestinationItem"
 import SearchBar from '../../components/supportComponents/SearchBar';
+import { getDestinations } from '../../store/actions/destinationActions';
 
 const DestinationsScreen = ({ navigation }) => {
-    const [destinations, setDestinations] = useState([]);
+    const dispatch = useDispatch()
 
-    axios.get("/destinations").then(res => { setDestinations(res.data) })
-    
+    useEffect(() => {
+        dispatch(getDestinations())
+    }, [dispatch])
+
+    const destinationsList = useSelector(state => state.destinationsList)
+    const { loading, destinations, error } = destinationsList
+
+
     return (
         <SafeAreaView >
             <SearchBar />
-            <FlatList
-                style={styles.flatlist}
-                data={destinations}
-                keyExtractor={item => item._id}
-                renderItem={itemData => (
-                    <DestinationItem
-                        title={itemData.item.title}
-                        rating={itemData.item.rating}
-                        introduction={itemData.item.introduction}
-                        titleImage={itemData.item.title_image}
-                    />
-                )}
-            />
+
+            {loading ? (
+                <ActivityIndicator size='large' color='#1A936F' style={{marginTop: 260}} /> ) : (
+                <FlatList
+                    style={styles.flatlist}
+                    data={destinations}
+                    keyExtractor={item => item._id}
+                    initialNumToRender={4}
+                    renderItem={itemData => (
+                        <DestinationItem
+                            id={itemData.item._id}
+                            title={itemData.item.title}
+                            rating={itemData.item.rating}
+                            introduction={itemData.item.introduction}
+                            titleImage={itemData.item.title_image}
+                            navigation={navigation}
+                        />
+                    )}
+                />
+            )}
+
         </SafeAreaView>
     )
 }
