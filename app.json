@@ -1,14 +1,13 @@
 {
   "expo": {
-    "name": "travelholic-mobile",
-    "slug": "travelholic-mobile",
+    "name": "Travelogic",
+    "slug": "travelogic-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {
-      "image": "./assets/images/full-logo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/images/splashLogo.png",
+      "resizeMode": "cover"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.shahfaisallive.travelholicmobile"
     },
     "web": {
       "favicon": "./assets/images/logo.png"

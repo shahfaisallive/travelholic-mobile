@@ -24,7 +24,7 @@ const DrawerNavigation = ({ navigation }) => {
     return (
         <Drawer.Navigator
             drawerType='slide'
-            edgeWidth={100}
+            edgeWidth={150}
             drawerContent={props => <DrawerContent {...props} />}
             screenOptions={{}}
         >

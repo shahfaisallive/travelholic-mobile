@@ -6,6 +6,8 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 // Importing screens
 import Trips from "../screens/trips/BookATripScreen"
+import TripDetails from "../screens/trips/TripDetailsScreen"
+import BookingForm from "../screens/trips/BookingFormScreen"
 
 // Importing components
 import { Icon } from 'react-native-elements/dist/icons/Icon';
@@ -35,6 +37,22 @@ const TripStackNavigation = ({ navigation }) => {
                         style={styles.menuIcon} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
                         <Icon name='menu' color='white' size={28} />
                     </TouchableOpacity>
+                }}
+            />
+
+            <Stack.Screen
+                name="TripDetails"
+                component={TripDetails}
+                options={{
+                    title: 'Details'
+                }}
+            />
+
+            <Stack.Screen
+                name="BookingForm"
+                component={BookingForm}
+                options={{
+                    title: 'Booking Form'
                 }}
             />
 

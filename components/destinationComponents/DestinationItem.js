@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     image: {
         borderRadius: 10,
         resizeMode: 'contain',
-        height: 250
+        height: 250,
     },
     intro: {
         marginTop: '2%',

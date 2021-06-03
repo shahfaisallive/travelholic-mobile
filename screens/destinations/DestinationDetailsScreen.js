@@ -30,7 +30,7 @@ const DestinationDetailsScreen = ({ route, navigation }) => {
         <View style={styles.container}>
             {loading ? (
                 <ActivityIndicator size='large' color='#1A936F' style={{ marginTop: 260 }} />) : (
-                <ScrollView style={{flex: 1}}>
+                <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
                     <IntroSection introduction={destinationDetails.introduction} titleImage={destinationDetails.title_image} rating={destinationDetails.rating} title={destinationDetails.title} />
                     <HistorySection history={destinationDetails.history} />
                     <GuidelinesSection guidelines={destinationDetails.guidelines} />
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 10,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
     },
 
 })
