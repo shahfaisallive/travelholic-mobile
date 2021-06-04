@@ -21,6 +21,8 @@ const TripDetailsScreen = ({ route, navigation }) => {
         navigation.setOptions({ title: route.params.title })
 
         LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+        LogBox.ignoreLogs(['Can\'t perform a React state update on an unmounted component']);
+        LogBox.ignoreLogs(['Please provide the source.html or source.uri prop']);
     }, [dispatch])
 
     const tripDetails = useSelector(state => state.tripDetails)
