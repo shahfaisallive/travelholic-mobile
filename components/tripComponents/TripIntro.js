@@ -19,9 +19,7 @@ const TripIntro = ({ trip, navigation }) => {
                 <Text style={styles.priceText}>{`PKR ${trip.price}`}</Text>
 
                 <Button title='Proceed to Booking' buttonStyle={styles.button}
-                    onPress={() => navigation.navigate('BookingForm', {
-                        tripID: trip._id,
-                    })} />
+                    onPress={() => navigation.navigate('BookingForm')} />
             </View>
 
             <Text style={styles.heading}>Description</Text>

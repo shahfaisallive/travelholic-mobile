@@ -1,16 +1,42 @@
-import React, { useState } from 'react'
-import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Alert, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
 import NumericInput from 'react-native-numeric-input'
+import { useDispatch, useSelector } from 'react-redux'
+import { saveBookingInfo } from '../../store/actions/tripActions'
 
 
-const BookingFormScreen = () => {
+const BookingFormScreen = ({ navigation }) => {
+    const dispatch = useDispatch()
+
     const [name, setName] = useState('')
     const [seats, setSeats] = useState(1)
     const [email, setEmail] = useState('')
     const [phoneNo, setPhoneNo] = useState()
     const [address, setAddress] = useState('')
     const [city, setCity] = useState('')
+
+
+    const trip = useSelector(state => state.tripDetails.trip)
+
+    const title = trip.title
+    const price = trip.price
+    const total_price = seats * price
+
+
+    const submitBookingInfo = () => {
+        if (!name || !seats || !email || !phoneNo || !address || !city) {
+            Alert.alert(
+                "Missing Fields",
+                "There are some missing fields which needs to be filled before proceeding."
+            );
+        } else {
+            dispatch(saveBookingInfo({ title, name, email,price, seats, phoneNo, address, city, total_price }))
+            navigation.navigate('BookingConfirmation')
+        }
+    }
+
+    console.log()
 
     return (
         <View>
@@ -46,7 +72,7 @@ const BookingFormScreen = () => {
                         <Input
                             onChangeText={city => setCity(city)} placeholder={'City'}
                             leftIcon={<Icon name="location-city" size={20} color='grey' />}
-                            secureTextEntry={true} containerStyle={styles.input}
+                            containerStyle={styles.input}
                             inputStyle={styles.inputStyle}
                         />
 
@@ -56,10 +82,10 @@ const BookingFormScreen = () => {
                                 iconStyle={{ color: 'white' }} totalWidth={100} value={seats}
                                 rightButtonBackgroundColor='#1A936F'
                                 leftButtonBackgroundColor='#1A936F' />
-                            <Text style={{marginLeft: 10, fontSize: 14}}>(Select number of seats)</Text>
+                            <Text style={{ marginLeft: 10, fontSize: 14 }}>(Select number of seats)</Text>
                         </View>
 
-                        <Button title={'Next'} onPress={() => { }}
+                        <Button title={'Next'} onPress={submitBookingInfo}
                             containerStyle={styles.nextBtnCont} buttonStyle={styles.nextBtn}
                             loading={false} />
 

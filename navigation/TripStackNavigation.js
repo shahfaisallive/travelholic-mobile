@@ -8,6 +8,9 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import Trips from "../screens/trips/BookATripScreen"
 import TripDetails from "../screens/trips/TripDetailsScreen"
 import BookingForm from "../screens/trips/BookingFormScreen"
+import BookingConfirmation from "../screens/trips/BookingConfirmationScreen"
+import BookingStatusScreen from '../screens/trips/BookingStatusScreen';
+
 
 // Importing components
 import { Icon } from 'react-native-elements/dist/icons/Icon';
@@ -53,6 +56,22 @@ const TripStackNavigation = ({ navigation }) => {
                 component={BookingForm}
                 options={{
                     title: 'Booking Form'
+                }}
+            />
+
+            <Stack.Screen
+                name="BookingConfirmation"
+                component={BookingConfirmation}
+                options={{
+                    title: 'Booking Confirmation'
+                }}
+            />
+
+            <Stack.Screen
+                name="BookingStatus"
+                component={BookingStatusScreen}
+                options={{
+                    title: 'Booking Status'
                 }}
             />
 
