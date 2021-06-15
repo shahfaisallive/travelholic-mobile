@@ -13,7 +13,7 @@ const LoginScreen = ({ navigation }) => {
     const user = useSelector(state => state.user)
     const { loading, userInfo, error } = user
     const dispatch = useDispatch()
-    const login = ()=>{
+    const login = ()=> {
         dispatch(userLogin(email,password))
     }
     return (

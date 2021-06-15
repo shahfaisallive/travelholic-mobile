@@ -21,19 +21,11 @@ const DrawerContent = (props) => {
         <View style={{ flex: 1 }}>
             <DrawerContentScrollView {...props} >
                 <View style={styles.drawerHeader}>
-                    <View>
-                        {
-                            userInfo ? 
-                            <Image
-                            source={require("../../assets/images/team-asad.jpg")}
-                            style={styles.logo}
-                            />:
-                            <Image
-                            source={require("../../assets/images/logo-png.png")}
-                            style={styles.logo}
-                            />
-                            
-                        }
+                    <View> 
+                        <Image
+                        source={require("../../assets/images/logo-png.png")}
+                        style={styles.logo}
+                        />
                     </View>
                     {
                         userInfo ?
@@ -41,22 +33,25 @@ const DrawerContent = (props) => {
                             <Title style={styles.title}>{userInfo.name}</Title>
                             <Caption style={styles.caption}>{userInfo.email}</Caption>
                         </View>:
-                        <View >
-                            
-                        </View>
+                        <></>
                     }
                 </View>
 
                 <Drawer.Section>
-                    <DrawerItem
-                        icon={() => (
-                            <Icon
-                                name="account-circle" color='#114B5F'
-                            />
-                        )}
-                        label="Profile" inactiveTintColor='#114B5F'
-                        onPress={() => { props.navigation.navigate("Profile") }}
-                    />
+                    {
+                        userInfo ?
+                        <DrawerItem
+                            icon={() => (
+                                <Icon
+                                    name="account-circle" color='#114B5F'
+                                />
+                            )}
+                            label="Profile" inactiveTintColor='#114B5F'
+                            onPress={() => { props.navigation.navigate("Profile") }}
+                        />:
+                        <></>
+                    }
+                    
                     <DrawerItem
                         icon={() => (
                             <Icon
