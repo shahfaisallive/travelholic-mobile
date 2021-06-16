@@ -2,11 +2,15 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { DrawerActions } from '@react-navigation/native';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux'
+
 
 
 // Importing screens
 import Authenticate from "../screens/authentication/LoginScreen"
 import Register from "../screens/authentication/RegisterScreen"
+import HomeScreen from "../screens/home/HomeScreen"
+import TabNavigation from "./TabNavigation"
 
 // Importing components
 import { Icon } from 'react-native-elements/dist/icons/Icon';
@@ -15,6 +19,9 @@ import { Icon } from 'react-native-elements/dist/icons/Icon';
 const Stack = createStackNavigator();
 
 const AuthenticateStackNavigation = ({ navigation }) => {
+    const user = useSelector(state => state.user)
+    const { loading, userInfo, error } = user
+
 
     const homeButton = () => <TouchableOpacity
         onPress={() => navigation.navigate("Home") }>
@@ -33,7 +40,10 @@ const AuthenticateStackNavigation = ({ navigation }) => {
 
             }}
         >
-            <Stack.Screen
+            
+            {userInfo == null ? (
+                // No token found, user isn't signed in
+                <Stack.Screen
                 name="Authenticate"
                 component={Authenticate}
                 options={{
@@ -45,7 +55,13 @@ const AuthenticateStackNavigation = ({ navigation }) => {
                     headerRight: homeButton
                 }}
             />
-
+                ) : (
+                // User is signed in
+                <Stack.Screen name="Home" add options= {{
+                    headerShown: false
+                  }} component={TabNavigation} />
+                )
+            }
             <Stack.Screen
                 name="Register"
                 component={Register}
@@ -54,7 +70,6 @@ const AuthenticateStackNavigation = ({ navigation }) => {
                     headerRight: homeButton
                 }}
             />
-
         </Stack.Navigator>
     )
 }

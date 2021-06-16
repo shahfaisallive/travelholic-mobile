@@ -1,11 +1,21 @@
 import React, { useState } from 'react'
-import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View,ToastAndroid } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux'
+import { userLogin } from '../../store/actions/userActions';
+
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
 
+    const user = useSelector(state => state.user)
+    const { loading, userInfo, error } = user
+    const dispatch = useDispatch()
+    const login = ()=> {
+        dispatch(userLogin(email,password))
+    }
     return (
         <View>
             <ImageBackground source={require('../../assets/images/loginbg.jpg')} style={styles.bgImage} imageStyle={styles.bg} >
@@ -25,9 +35,15 @@ const LoginScreen = ({ navigation }) => {
                         inputStyle={styles.inputStyle}
                     />
 
-                    <Button title={'Login'} onPress={() => { }}
+                    {
+                        loading ?
+                        <Button title={'Login'}
+                        containerStyle={styles.loginBtnCont} buttonStyle={styles.loginBtn}
+                        loading={true} /> :
+                        <Button title={'Login'} onPress={login}
                         containerStyle={styles.loginBtnCont} buttonStyle={styles.loginBtn}
                         loading={false} />
+                    }
 
                     <Text style={styles.subText}>OR</Text>
 
