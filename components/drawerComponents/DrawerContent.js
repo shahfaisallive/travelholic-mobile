@@ -14,7 +14,6 @@ const DrawerContent = (props) => {
     const dispatch = useDispatch()
 
     const logout=()=>{
-
         dispatch(userLogout())
     }
     return (
@@ -103,17 +102,7 @@ const DrawerContent = (props) => {
                         label="Log out" inactiveTintColor='#114B5F'
                         onPress={logout}
                     />
-                </Drawer.Section> :
-                <Drawer.Section style={styles.bottomDrawerSection} >
-                    
-                    <DrawerItem
-                        icon={() => (
-                            <Icon name='settings' color='#114B5F' />
-                        )}
-                        label="Settings" inactiveTintColor='#114B5F'
-                        onPress={() => { }}
-                    />
-                </Drawer.Section>
+                </Drawer.Section> : <></>
 
             }
         </View>

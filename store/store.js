@@ -34,14 +34,14 @@ async function fetchData() {
 fetchData();
 
 
-const reducer = combineReducers({
-    login:loginReducer,
-    destinationsList: getDestinationsReducer,
-    destinationDetails: destinationDetailsReducer,
-    tripList: tripListReducer,
-    tripDetails: tripDetailsReducer,
-    bookingInfo: bookingInfoReducer
-})
+// const reducer = combineReducers({
+//     login:loginReducer,
+//     destinationsList: getDestinationsReducer,
+//     destinationDetails: destinationDetailsReducer,
+//     tripList: tripListReducer,
+//     tripDetails: tripDetailsReducer,
+//     bookingInfo: bookingInfoReducer
+// })
 
 const rootReducer = combineReducers({
     user:loginReducer,

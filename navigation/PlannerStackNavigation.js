@@ -6,6 +6,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 // Importing screens
 import Planner from "../screens/planner/PlanATripScreen"
+import RoutePossibility from '../screens/planner/RoutePossibilityScreen'
 
 // Importing components
 import { Icon } from 'react-native-elements/dist/icons/Icon';
@@ -35,6 +36,14 @@ const PlannerStackNavigation = ({ navigation }) => {
                         style={styles.menuIcon} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
                         <Icon name='menu' color='white' size={28} />
                     </TouchableOpacity>
+                }}
+            />
+
+            <Stack.Screen
+                name="RoutePossibility"
+                component={RoutePossibility}
+                options={{
+                    title: 'Check Routes'
                 }}
             />
 

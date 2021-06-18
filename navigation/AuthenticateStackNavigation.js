@@ -24,7 +24,7 @@ const AuthenticateStackNavigation = ({ navigation }) => {
 
 
     const homeButton = () => <TouchableOpacity
-        onPress={() => navigation.navigate("Home") }>
+        onPress={() => navigation.navigate("Home")}>
         <Icon name='home' color='white' size={26} style={{ marginRight: 10 }} />
     </TouchableOpacity>
 
@@ -40,27 +40,27 @@ const AuthenticateStackNavigation = ({ navigation }) => {
 
             }}
         >
-            
+
             {userInfo == null ? (
                 // No token found, user isn't signed in
                 <Stack.Screen
-                name="Authenticate"
-                component={Authenticate}
-                options={{
-                    title: 'Login',
-                    headerLeft: () => <TouchableOpacity
-                        style={styles.menuIcon} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                        <Icon name='menu' color='white' size={28} />
-                    </TouchableOpacity>,
-                    headerRight: homeButton
-                }}
-            />
-                ) : (
+                    name="Authenticate"
+                    component={Authenticate}
+                    options={{
+                        title: 'Login',
+                        headerLeft: () => <TouchableOpacity
+                            style={styles.menuIcon} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                            <Icon name='menu' color='white' size={28} />
+                        </TouchableOpacity>,
+                        headerRight: homeButton
+                    }}
+                />
+            ) : (
                 // User is signed in
-                <Stack.Screen name="Home" add options= {{
+                <Stack.Screen name="Home" add options={{
                     headerShown: false
-                  }} component={TabNavigation} />
-                )
+                }} component={TabNavigation} />
+            )
             }
             <Stack.Screen
                 name="Register"

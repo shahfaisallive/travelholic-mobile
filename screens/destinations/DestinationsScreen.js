@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { StyleSheet, FlatList, SafeAreaView, ActivityIndicator } from 'react-native'
+import {Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
 
 import DestinationItem from "../../components/destinationComponents/DestinationItem"
@@ -22,7 +22,10 @@ const DestinationsScreen = ({ navigation }) => {
             <SearchBar />
 
             {loading ? (
-                <ActivityIndicator size='large' color='#1A936F' style={{ marginTop: 260 }} />) : (
+                <>
+                    <ActivityIndicator size='large' color='#1A936F' style={{ marginTop: 260 }} />
+                    <Text style={{textAlign: 'center', marginTop: 4}}>Loading Destinations</Text>
+                </>) : (
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     style={styles.flatlist}
