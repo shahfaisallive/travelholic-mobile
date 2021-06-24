@@ -93,7 +93,7 @@ const DrawerContent = (props) => {
                             <Icon name='settings' color='#114B5F' />
                         )}
                         label="Settings" inactiveTintColor='#114B5F'
-                        onPress={() => { }}
+                        onPress={() => {props.navigation.navigate("Settings")}}
                     />
                     <DrawerItem
                         icon={() => (
