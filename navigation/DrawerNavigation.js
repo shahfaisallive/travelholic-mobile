@@ -5,8 +5,6 @@ import { Icon } from 'react-native-elements/dist/icons/Icon';
 
 
 // Importing Screens and components
-import Register from "../screens/authentication/RegisterScreen"
-import Profile from "../screens/profile/ProfileScreen"
 import About from "../screens/support/About"
 import Feedback from "../screens/support/Feedback"
 import DrawerContent from '../components/drawerComponents/DrawerContent';
@@ -15,6 +13,7 @@ import DrawerContent from '../components/drawerComponents/DrawerContent';
 // Importing Navigations
 import TabNavigation from "./TabNavigation"
 import AuthenticateStack from "./AuthenticateStackNavigation"
+import ProfileStack from './ProfileStackNavigation';
 
 const Drawer = createDrawerNavigator();
 
@@ -30,8 +29,7 @@ const DrawerNavigation = ({ navigation }) => {
         >
             <Drawer.Screen name='Home' component={TabNavigation} />
             <Drawer.Screen name='Authenticate' component={AuthenticateStack} />
-            <Drawer.Screen name='Profile' component={Profile}
-                options={{ headerStyle: { backgroundColor: '#114B5F' }, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center' }} />
+            <Drawer.Screen name='Profile' component={ProfileStack} />
             <Drawer.Screen name='About' component={About}
                 options={{ headerStyle: { backgroundColor: '#114B5F' }, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center' }} />
             <Drawer.Screen name='Feedback' component={Feedback}
