@@ -7,7 +7,7 @@ import { persistStore,persistReducer } from 'redux-persist';
 
 // Importing reducers
 import { destinationDetailsReducer, getDestinationsReducer } from "./reducers/destinationReducers"
-import { bookingInfoReducer, tripDetailsReducer, tripListReducer } from './reducers/tripReducers'
+import { bookedTripReducer, bookingInfoReducer, createBookingReducer, paymentMethodReducer, tripDetailsReducer, tripListReducer } from './reducers/tripReducers'
 import { loginReducer } from './reducers/userReducers'
 
 let userInfoFromStorage 
@@ -33,23 +33,16 @@ async function fetchData() {
 };
 fetchData();
 
-
-// const reducer = combineReducers({
-//     login:loginReducer,
-//     destinationsList: getDestinationsReducer,
-//     destinationDetails: destinationDetailsReducer,
-//     tripList: tripListReducer,
-//     tripDetails: tripDetailsReducer,
-//     bookingInfo: bookingInfoReducer
-// })
-
 const rootReducer = combineReducers({
     user:loginReducer,
     destinationsList: getDestinationsReducer,
     destinationDetails: destinationDetailsReducer,
     tripList: tripListReducer,
     tripDetails: tripDetailsReducer,
-    bookingInfo: bookingInfoReducer
+    bookingInfo: bookingInfoReducer,
+    bookingDetails: createBookingReducer,
+    bookedTrip: bookedTripReducer,
+    paymentMethod: paymentMethodReducer,
 })
 
 const persistConfig ={

@@ -39,6 +39,8 @@ const BookATripScreen = ({ navigation }) => {
                             price={itemData.item.price}
                             rating={itemData.item.rating}
                             reviews={itemData.item.reviews}
+                            startDate={itemData.item.start_date}
+                            endDate={itemData.item.end_date}
                             titleImage={itemData.item.display_image}
                             navigation={navigation}
                         />
