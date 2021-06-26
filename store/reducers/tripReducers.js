@@ -1,4 +1,4 @@
-import { TRIP_LIST_REQUEST, TRIP_LIST_SUCCESS, TRIP_LIST_FAIL, TRIP_DETAILS_REQUEST, SAVE_PAYMENT_METHOD, TRIP_DETAILS_SUCCESS, TRIP_DETAILS_FAIL, TRIP_CREATE_REVIEW_REQUEST, TRIP_CREATE_REVIEW_SUCCESS, TRIP_CREATE_REVIEW_FAIL, TRIP_CREATE_REVIEW_RESET, SAVE_BOOKING_INFO, CONFIRM_BOOKING_REQUEST, CONFIRM_BOOKING_SUCCESS, CONFIRM_BOOKING_FAIL,GET_BOOKED_TRIP_SUCCESS, GET_BOOKED_TRIP_FAIL, GET_BOOKED_TRIP_REQUEST } from '../constants/tripConstants'
+import { TRIP_LIST_REQUEST, TRIP_LIST_SUCCESS, TRIP_LIST_FAIL, TRIP_DETAILS_REQUEST, TRIP_CREATE_REVIEW_RESET, SAVE_PAYMENT_METHOD, TRIP_DETAILS_SUCCESS, TRIP_DETAILS_FAIL,SAVE_BOOKING_INFO, CONFIRM_BOOKING_REQUEST, CONFIRM_BOOKING_FAIL,CONFIRM_BOOKING_SUCCESS, GET_BOOKED_TRIP_SUCCESS, GET_BOOKED_TRIP_FAIL, GET_BOOKED_TRIP_REQUEST, TRIP_CREATE_REVIEW_REQUEST, TRIP_CREATE_REVIEW_SUCCESS, TRIP_CREATE_REVIEW_FAIL, } from '../constants/tripConstants'
 
 
 export const tripListReducer = (state = { trips: [] }, action) => {
@@ -94,6 +94,22 @@ export const paymentMethodReducer = (state = { paymentMethod: null }, action) =>
                 paymentMethod: action.payload
             }
 
+        default:
+            return state
+    }
+}
+
+
+export const tripCreateReviewReducer = (state = {}, action) => {
+    switch (action.type) {
+        case TRIP_CREATE_REVIEW_REQUEST:
+            return { loading: true }
+        case TRIP_CREATE_REVIEW_SUCCESS:
+            return { loading: false, success: true }
+        case TRIP_CREATE_REVIEW_FAIL:
+            return { loading: false, error: action.payload }
+        case TRIP_CREATE_REVIEW_RESET:
+            return {}
         default:
             return state
     }

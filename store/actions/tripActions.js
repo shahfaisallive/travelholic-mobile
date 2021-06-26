@@ -1,5 +1,5 @@
 import axios from "../../components/supportComponents/axios"
-import { TRIP_LIST_REQUEST, TRIP_LIST_SUCCESS, TRIP_LIST_FAIL, TRIP_DETAILS_REQUEST,SAVE_PAYMENT_METHOD, TRIP_DETAILS_SUCCESS, TRIP_DETAILS_FAIL, TRIP_CREATE_REVIEW_REQUEST, TRIP_CREATE_REVIEW_SUCCESS, TRIP_CREATE_REVIEW_FAIL, SAVE_BOOKING_INFO, CONFIRM_BOOKING_REQUEST, CONFIRM_BOOKING_SUCCESS, CONFIRM_BOOKING_FAIL,GET_BOOKED_TRIP_SUCCESS, GET_BOOKED_TRIP_FAIL, GET_BOOKED_TRIP_REQUEST } from '../constants/tripConstants'
+import { TRIP_LIST_REQUEST, TRIP_LIST_SUCCESS, TRIP_LIST_FAIL, TRIP_DETAILS_REQUEST,SAVE_PAYMENT_METHOD, TRIP_DETAILS_SUCCESS, TRIP_DETAILS_FAIL, TRIP_CREATE_REVIEW_REQUEST, TRIP_CREATE_REVIEW_SUCCESS, TRIP_CREATE_REVIEW_FAIL, SAVE_BOOKING_INFO, CONFIRM_BOOKING_REQUEST, CONFIRM_BOOKING_SUCCESS, CONFIRM_BOOKING_FAIL,GET_BOOKED_TRIP_SUCCESS, GET_BOOKED_TRIP_FAIL, GET_BOOKED_TRIP_REQUEST, } from '../constants/tripConstants'
 
 
 
@@ -117,4 +117,36 @@ export const savePaymentMethod = (data) => (dispatch) => {
         payload: data
     })
 
+}
+
+export const createTripReview = (tripId, review) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: TRIP_CREATE_REVIEW_REQUEST
+        })
+        
+        const {
+            user: { userInfo }
+        } = getState()
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        }
+
+        await axios.post(`/trips/${tripId}/reviews`, review, config)
+
+        dispatch({
+            type: TRIP_CREATE_REVIEW_SUCCESS
+        })
+    } catch (error) {
+        dispatch({
+            type: TRIP_CREATE_REVIEW_FAIL,
+            payload: error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message,
+        })
+    }
 }

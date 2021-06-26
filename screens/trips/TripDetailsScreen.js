@@ -12,7 +12,6 @@ import ReviewSection from '../../components/tripComponents/ReviewSection'
 
 const TripDetailsScreen = ({ route, navigation }) => {
     const tripID = route.params.tripID
-
     const dispatch = useDispatch()
 
     useEffect(() => {
