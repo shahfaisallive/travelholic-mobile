@@ -2,34 +2,63 @@ import React, { useEffect, useState } from 'react'
 import { ScrollView, Text, View, StyleSheet, Image } from 'react-native'
 import { Button } from 'react-native-elements'
 import { useSelector } from 'react-redux'
-// import axios, { imagePath } from "../../components/supportComponents/axios"
+import axios, { imagePath } from "../../components/supportComponents/axios"
 
 const ProfileScreen = ({navigation}) => {
+
+	const [name,setName] = useState(" ")
+	const [email,setEmail] = useState(" ")
+	const [mobile_num,setNumber] = useState(" ")
+	const [gender,setGender] = useState(" ")
+	const [imageName,setImageName]=useState('default.jpg')
+
+    useEffect(()=>{
+        axios.get(`/users/${userInfo._id}`)
+		.then((res)=>{
+			setName(res.data.name)
+			setEmail(res.data.email)
+			setNumber(res.data.mobile_num)
+			if (res.data.gender){
+				setGender(res.data.gender)
+			}
+			setImageName(res.data.display_image_name)
+		
+		// //setImagePath(res.data.display_image_path)
+	}).catch((err)=>{
+		console.log(err)
+	});
+    },[])
 
     const userInfo = useSelector(state => state.user.userInfo)
 
     return (
         <ScrollView style={styles.container}>
             <View style={styles.imageView}>
-                <Image source={require('../../assets/images/team-faisal.jpeg')} accessibilityLabel={'Profile Image'} style={styles.image} />
-                <Button title='Change photo' onPress={() => { }} buttonStyle={styles.btn} />
+                <Image source={{uri:`${imagePath}/users/${imageName}`}} accessibilityLabel={'Profile Image'} style={styles.image} />
             </View>
 
             <View style={styles.userInfoView}>
                 <View style={styles.infoViewBox}>
                     <Text style={styles.userInfoHeading}>Name: </Text>
-                    <Text style={styles.userInfoText}>{userInfo.name}</Text>
+                    <Text style={styles.userInfoText}>{name}</Text>
                 </View>
                 <View style={styles.infoViewBox}>
                     <Text style={styles.userInfoHeading}>Email: </Text>
-                    <Text style={styles.userInfoText}>{userInfo.email}</Text>
+                    <Text style={styles.userInfoText}>{email}</Text>
                 </View>
                 <View style={styles.infoViewBox}>
-                    <Text style={styles.userInfoHeading}>Phone: </Text>
-                    <Text style={styles.userInfoText}>phone number to be imported</Text>
+                    <Text style={styles.userInfoHeading}>Mobile: </Text>
+                    <Text style={styles.userInfoText}>{mobile_num}</Text>
                 </View>
-            <Button title='Update Profile' onPress={() => navigation.navigate('UpdateProfile')} buttonStyle={styles.updateBtn} />
-
+                {
+                    gender =='' ?
+                    <View style={styles.infoViewBox}>
+                        <Text style={styles.userInfoHeading}>Gender: </Text>
+                        <Text style={styles.userInfoText}>{gender}</Text>
+                    </View>:
+                    <></>
+                }
+                <Button title='Update Profile' onPress={() => navigation.navigate('UpdateProfile')} buttonStyle={styles.updateBtn} />
             </View>
 
         </ScrollView>

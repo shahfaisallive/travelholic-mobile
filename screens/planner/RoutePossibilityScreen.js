@@ -1,23 +1,58 @@
-import React, { useState } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react'
+import { Text, View, StyleSheet, TouchableOpacity,ToastAndroid } from 'react-native';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Icon } from 'react-native-elements';
+import axios from "../../components/supportComponents/axios"
+
 
 
 const RoutePossibility = ({ navigation }) => {
+
+    useEffect(()=>{
+        setOutput('')
+        axios.get('/tripplannerdestination/')
+		.then(res=>{
+            setDestinations([])
+			console.log(res.data)
+            res.data.forEach((element)=>{
+                setDestinations((curr)=>{
+                    return[{label:element.name,value:element._id},...curr]
+                })
+            })
+		})
+		.catch(err=>{
+			console.log(err)
+		})
+    },[])
+
+    const checkRoute = (e)=> {
+		e.preventDefault()
+		if (toValue === undefined || fromValue === undefined ||toValue === ''|| fromValue === ''){
+            ToastAndroid.show(
+                'Please Select Your Destinations',
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM
+            );
+		}
+		else {
+			// console.log(toValue,fromValue)
+			axios.post('/routes/route',{destination_to:toValue,destination_from:fromValue})
+			.then(res=>{
+				setOutput(res.data.status)
+			})
+			.catch(err=>{
+				console.log(err)
+			})
+		}
+	}
     const [fromPickerOpen, setFromPickerOpen] = useState(false)
     const [fromValue, setFromValue] = useState(null)
-    const [fromDestinations, setFromDestinations] = useState([
-        { label: 'Dir', value: 'Dir' },
-        { label: 'Chitral', value: 'Chitral' }
-    ])
-
-    const [toPickerOpen, setToPickerOpen] = useState(false)
     const [toValue, setToValue] = useState(null)
-    const [toDestinations, setToDestinations] = useState([
-        { label: 'Dir', value: 'Dir' },
-        { label: 'Chitral', value: 'Chitral' }])
+    const [output, setOutput] = useState('')
+    const [toPickerOpen, setToPickerOpen] = useState(false)
+    const [destinations, setDestinations] = useState([])
+    
 
     return (
         <View style={styles.container}>
@@ -28,13 +63,13 @@ const RoutePossibility = ({ navigation }) => {
                 <DropDownPicker
                     open={fromPickerOpen}
                     value={fromValue}
-                    items={fromDestinations}
+                    items={destinations}
                     setOpen={setFromPickerOpen}
                     setValue={setFromValue}
-                    setItems={setFromDestinations}
+                    setItems={setDestinations}
                     containerStyle={styles.pickerStyle}
                     zIndex={10001}
-                    searchable={true}
+                    searchable={false}
                     placeholder='Select First Destination'
                 />
 
@@ -42,23 +77,23 @@ const RoutePossibility = ({ navigation }) => {
                 <DropDownPicker
                     open={toPickerOpen}
                     value={toValue}
-                    items={toDestinations}
+                    items={destinations}
                     setOpen={setToPickerOpen}
                     setValue={setToValue}
-                    setItems={setToDestinations}
+                    setItems={setDestinations}
                     containerStyle={styles.pickerStyle}
-                    searchable={true}
+                    searchable={false}
                     placeholder='Select Second Destination'
 
                 />
             </View>
 
-            <Button title='Check Route' onPress={() => { console.log('btn pressed') }}
+            <Button title='Check Route' onPress={checkRoute}
                 containerStyle={styles.btnCheckCont} buttonStyle={styles.btnCheck}
             />
 
             <View style={styles.outputView}>
-                <Text style={styles.outputText}>nahh jee naa, ye rasta band hy</Text>
+                <Text style={styles.outputText}>{output}</Text>
             </View>
 
             <View style={{ marginTop: 70 }}>

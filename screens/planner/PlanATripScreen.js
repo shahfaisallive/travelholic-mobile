@@ -4,116 +4,369 @@ import { Input, Button, Icon } from 'react-native-elements';
 import { Divider } from 'react-native-paper';
 import NumericInput from 'react-native-numeric-input'
 import DropDownPicker from 'react-native-dropdown-picker';
+import { Formik, Form, Field, FieldArray } from 'formik';
+import axios from "../../components/supportComponents/axios"
+
+
 
 
 // Planner components
 import SearchBar from '../../components/supportComponents/SearchBar';
 
 const PlanATripScreen = ({ navigation }) => {
-    useEffect(() => {
-        LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-    }, [])
+    const [stopsLoader,setStopsLoader]=useState(false)
+    const [calculateBudgetLoader,setCalculateBudgetLoader]=useState(false)
+      const [destinations,setDestinations] = useState([])
+      const [displayTripTable,setDisplayTripTable] = useState(false)
+      const [displayGenerateButton,setDisplayGenerateButton] = useState(false)
+      const [displayEstimateButton,setDisplayEstimateButton] = useState(false)
+      const [stops,setStops] = useState([])
+      const [minHotel,setMinHotel] = useState(0)
+      const [maxHotel,setMaxHotel] = useState(0)
+      const [minTravel,setMinTravel] = useState(0)
+      const [maxTravel,setMaxTravel] = useState(0)
+      const [minTotal,setMinTotal] = useState(0)
+      const [maxTotal,setMaxTotal] = useState(0)
+      const [to,setTo] = useState('')
+      const [from,setFrom] = useState('')
+      const [departure,setDeparture] = useState('')
+      const [final,setFinal] = useState('')
+      const [disable,setDisable] = useState(false)
+      const [luxury,setLuxury] = useState([])
+      const [budget,setBudget] = useState([])
 
 
-    const [departLocation, setDepartLocation] = useState('')
-    const [finalLocation, setFinalLocation] = useState('')
-    const [numPerson, setNumPerson] = useState(1)
-    const [numDays, setNumDays] = useState(1)
-    const [stayPickerOpen, setStayPickerOpen] = useState(false)
-    const [stayValue, setStayValue] = useState(null)
-    const [stayDestinations, setStayDestinations] = useState([
+    const [fromPickerOpen, setFromPickerOpen] = useState(false)
+    const [fromValue, setFromValue] = useState(null)
+    const [toValue, setToValue] = useState(null)
+    const [toPickerOpen, setToPickerOpen] = useState(false)
+    const [fromDestinations, setFromDestinations] = useState([
+    { label: 'Dir', value: 'Dir' },
+        { label: 'Chitral', value: 'Chitral' }
+    ])
+    const [toDestinations, setToDestinations] = useState([
         { label: 'Dir', value: 'Dir' },
         { label: 'Chitral', value: 'Chitral' }
     ])
-
-
+      useEffect(()=>{
+          axios.get('/tripplannerdestination/')
+          .then(res=>{
+              console.log(res.data)
+              setDestinations(res.data)
+          })
+          .catch(err=>{
+              console.log(err)
+          })
+      },[])
+     const initialValues = {
+        numberOfStops: '',
+        persons:'',
+        destinations: []
+    };
+  
+    const onGenerateTripPlan = (e)=>{
+      e.preventDefault()
+      setDisplayTripTable(true)
+      setDisplayGenerateButton(true)
+    }
+  
+    function onChangeTickets(e, field, values, setValues) {
+        // update dynamic form
+        const destinations = [...values.destinations];
+        const numberOfStops = e.target.value || 0;
+        const previousNumber = parseInt(field.value || '0');
+        if (previousNumber < numberOfStops) {
+            for (let i = previousNumber; i < numberOfStops; i++) {
+                destinations.push('');
+            }
+        } else {
+            for (let i = previousNumber; i >= numberOfStops; i--) {
+                destinations.splice(i, 1);
+            }
+        }
+        setValues({ ...values, destinations });
+  
+        // call formik onChange method
+        field.onChange(e);
+    }
+    function checkArrayForEmptyIndex(arr){
+      for (let index = 0; index < arr.length; index++) {
+        if (arr[index]==='' || arr[index]===undefined){
+          return true
+        }
+      }
+      return false
+    }
+    // function checkArrayForRepeatedValue(arr){
+    //   let nextIndex=1
+    //   for (let index = 0; index < arr.length; index++) {
+    //     if (arr[index]===arr[nextIndex]){
+    //       return true
+    //     }
+    //     nextIndex++
+    //   }
+    //   return false
+    // }
+    function getStops(){
+      setStopsLoader(true)
+      console.log(to,from)
+      if ((to==='' || undefined)||(from==='' || undefined)){
+        toast.warning("Please Select Both Departure and Final Location", {
+          position: toast.POSITION.TOP_CENTER
+        });
+      }
+      else {
+        axios.post('/tripplannerdestination/coordinates/destinations',{'to':to,'from':from})
+        .then(res=>{
+          console.log(res.data)
+          if (res.data.length===0){
+            reset()
+          }else{
+  
+            setStops(res.data)
+          }
+        setStopsLoader(false)
+  
+        })
+        .catch(err=>{
+          console.log(err)
+          setStopsLoader(false)
+        })
+        setDisable(true)
+  
+      }
+      
+    }
+    function reset(){
+      setStops([])
+      setDisable(false)
+      setMinTotal(0)
+      setMaxTotal(0)
+      setMinHotel(0)
+      setMaxHotel(0)
+      setMinTravel(0)
+      setMaxTravel(0)
+      setDisplayTripTable(false)
+      setDisplayEstimateButton(false)
+      setDisplayGenerateButton(false)
+    }
+    function handleOnChangeDeparture(e) {
+      setFrom(e.target.value);
+      const selectedIndex = e.target.options.selectedIndex;
+      setDeparture(e.target.options[selectedIndex].getAttribute('data'))
+    }
+    function handleOnChangeFinal(e) {
+      setTo(e.target.value);
+      const selectedIndex = e.target.options.selectedIndex;
+      setFinal(e.target.options[selectedIndex].getAttribute('data'))
+    }
+    function onSubmit(fields) {
+      setCalculateBudgetLoader(true)
+      // display form field values on success
+      // alert('SUCCESS!! :-)\n\n' + JSON.stringify(fields, null, 4));
+      if (fields.destinations.length===''){
+        toast.warning("Please Fill Up The Form", {
+          position: toast.POSITION.TOP_CENTER
+        });
+      }
+      else if (fields.persons==='' || fields.persons===undefined) {
+        toast.warning("Please Select Number of Persons", {
+          position: toast.POSITION.TOP_CENTER
+        });
+      }
+      else if (checkArrayForEmptyIndex(fields.destinations)) {
+        toast.warning("Your Form is Incomplete", {
+          position: toast.POSITION.TOP_CENTER
+        });
+      }
+      else {
+        var destinations = []
+        destinations.push(...fields.destinations);
+        destinations.unshift(departure)
+        destinations[destinations.length] = final
+        axios.post('/plan/estimate',{destinations:destinations})
+        .then(res=>{
+          console.log(res.data)
+          setMinHotel(fields.persons*res.data.minHotel)
+          setMaxHotel(fields.persons*res.data.maxHotel)
+          setMinTravel(fields.persons*res.data.minTransportFare)
+          setMaxTravel(fields.persons*res.data.maxTransportFare)
+          setMinTotal(fields.persons*res.data.newMinEstimate)
+          setMaxTotal(fields.persons*res.data.newMaxEstimate)
+          setLuxury(res.data.luxury)
+          setBudget(res.data.budget)
+          setDisplayEstimateButton(true)
+          setCalculateBudgetLoader(false)
+        })
+        .catch(err=>{ 
+          toast.warning(err.response.data.message, {
+            position: toast.POSITION.TOP_CENTER
+          });
+          setCalculateBudgetLoader(false)
+        })
+      }
+    }
+  
     return (
-        <ScrollView style={{ flex: 1, paddingBottom: 10 }} >
-            <SearchBar />
+      <ScrollView style={{flex:1,paddingBottom:10}}>
+        <SearchBar/>
 
-            {/* Route Possibility Link Button */}
-            <View style={styles.routeCheckView}>
-                <Text style={{ fontSize: 16, alignSelf: 'center', marginTop: 10 }}>Click below to check any route possibility</Text>
-                <TouchableOpacity style={{ backgroundColor: 'white', width: '90%', marginTop: 10 }} >
-                    <Icon name='fact-check' iconStyle={styles.iconRouteCheck}
-                        onPress={() => navigation.navigate('RoutePossibility')} />
-                    <Text style={styles.label1}>Check Route Possibility</Text>
-                </TouchableOpacity>
+        {/* Route Possibility Link Button */}
+        <View style={styles.routeCheckView}>
+            <Text style={{ fontSize: 16, alignSelf: 'center', marginTop: 10 }}>Click below to check any route possibility</Text>
+            <TouchableOpacity style={{ backgroundColor: 'white', width: '90%', marginTop: 10 }} >
+                <Icon name='fact-check' iconStyle={styles.iconRouteCheck}
+                    onPress={() => navigation.navigate('RoutePossibility')} />
+                <Text style={styles.label1}>Check Route Possibility</Text>
+            </TouchableOpacity>
+        </View>
+
+        <Divider />
+
+        <View style={styles.TopContainer} >
+            <Text style={{ fontSize: 16, alignSelf: 'center', marginBottom: 15 }}>Start planning your trip below</Text>
+
+            <Text style={styles.label}>Departure Location</Text>
+            <DropDownPicker
+                open={fromPickerOpen}
+                value={fromValue}
+                items={fromDestinations}
+                setOpen={setFromPickerOpen}
+                setValue={setFromValue}
+                setItems={setFromDestinations}
+                containerStyle={styles.pickerStyle}
+                zIndex={10001}
+                searchable={false}
+                placeholder='Select First Destination'
+            />
+            <Text style={styles.label}>Arrivaal Location</Text>
+            <DropDownPicker
+                open={fromPickerOpen}
+                value={fromValue}
+                items={fromDestinations}
+                setOpen={setFromPickerOpen}
+                setValue={setFromValue}
+                setItems={setFromDestinations}
+                containerStyle={styles.pickerStyle}
+                zIndex={10001}
+                searchable={false}
+                placeholder='Select First Destination'
+            />
+            <Button 
+                title='Go' 
+                onPress={() => { console.log('btn pressed') }}
+                containerStyle={styles.btnCont} buttonStyle={styles.btn}
+            />
+        </View>
+        <Formik initialValues={initialValues} onSubmit={onSubmit}>
+        {({values, setValues }) => (
+        <View>
+          <View >
+            
+            {
+              stops.length ===0 ?
+              <View className=" mt-3">
+                
+                 <Button 
+                    title='Check Route' 
+                    onPress={getStops}
+                    containerStyle={styles.btnCheckCont} buttonStyle={styles.btnCheck}
+                    loading={stopsLoader}
+                />
+                
+              </View>
+              :
+              <View>
+                <View className="form-group mt-2">
+                  <label className='font-weight-bold mr-1'>Number of Days</label>
+                  <Field name="numberOfStops">
+                    {({ field }) => (
+											<select className='w-10 ml-2' {...field} onChange={e => onChangeTickets(e, field, values, setValues)}>
+													<option value=""></option>
+													{[1,2,3,4,5,6,7,8,9,10].map(i => 
+															<option key={i} value={i-1}>{i}</option>
+													)}
+											</select>
+                    )}
+                    </Field> 
+                </View>
+                
+                <View>
+              <View className="list-group-item w-25 mt-2">
+                <View className="form-group ">
+                    <label className='font-weight-bold'>Persons</label>
+                    <Field className='w-100' name='persons' type='select' as={Select} >
+                        <option value ='1'></option>
+                        <option value ='1'>1</option>
+                        <option value ='2'>2</option>
+                        <option value ='3'>3</option>
+                        <option value ='4'>4</option>
+                        <option value ='5'>5</option>
+                    </Field>
+                </View>
+              </View>
             </View>
-
-            <Divider />
-
-            {/* Top container for Selecting Depart and Final Location */}
-            <View style={styles.TopContainer}>
-                <Text style={{ fontSize: 16, alignSelf: 'center', marginBottom: 15 }}>Start planning your trip below</Text>
-
-                <Input
-                    label='Departure Location' labelStyle={styles.inputlabel}
-                    onChangeText={departLocation => setDepartLocation(departLocation)}
-                    containerStyle={styles.input} inputStyle={styles.inputStyle}
-                />
-
-                <Input
-                    label='Final Location' labelStyle={styles.inputlabel}
-                    onChangeText={departLocation => setDepartLocation(departLocation)}
-                    containerStyle={styles.input} inputStyle={styles.inputStyle}
-                />
-
-                <Button title='Go' onPress={() => { console.log('btn pressed') }}
-                    containerStyle={styles.btnCont} buttonStyle={styles.btn}
+            <View className=" mt-3">
+                <Button 
+                    title='Check Route' 
+                    onPress={getStops}
+                    containerStyle={styles.btnCheckCont} buttonStyle={styles.btnCheck}
+                    loading={calculateBudgetLoader}
                 />
             </View>
-            <Divider />
-
-            {/* Second Container for selecting plan a trip options */}
-            <View style={styles.secondContainer}>
-                <Text style={styles.label}>Number of Days</Text>
-                <NumericInput onChange={numDays => setNumDays(numDays)}
-                    minValue={1} rounded containerStyle={styles.numCounter}
-                    iconStyle={{ color: 'white' }} totalWidth={100} value={numPerson}
-                    rightButtonBackgroundColor='#1A936F'
-                    leftButtonBackgroundColor='#1A936F' />
-
-                {/* SELECT STAYS */}
-                <Text style={styles.label}>Select your night stays</Text>
-                <View style={styles.staysView}>
-                    <DropDownPicker
-                        open={stayPickerOpen}
-                        value={stayValue}
-                        items={stayDestinations}
-                        setOpen={setStayPickerOpen}
-                        setValue={setStayValue}
-                        setItems={setStayDestinations}
-                        placeholder='Select Destination'
-                    />
+            {
+              minTotal > 0 ? 
+               (
+                <View style={styles.outputView}>
+                    <Text>Minimum Hotel Expense: {minHotel}rs </Text>
+                    <Text>Maximum Hotel Expense: {maxHotel}rs</Text>
+                    <Text>Maximum Travel Expense: {maxTravel}rs</Text>
+                    <Text>Minimum Travel Expense: {minTravel}rs</Text>
+                    <Text>Total Estimate Budget Range: {minTotal}rs - {maxTotal}rs</Text>
                 </View>
 
-                {/* Select number of persons */}
-                <Text style={styles.label}>Number of Persons</Text>
-                <NumericInput onChange={numPerson => setNumPerson(numPerson)}
-                    minValue={1} rounded containerStyle={styles.numCounter}
-                    iconStyle={{ color: 'white' }} totalWidth={100} value={numPerson}
-                    rightButtonBackgroundColor='#1A936F'
-                    leftButtonBackgroundColor='#1A936F' />
-
-                <Button title='Calculate Approximate Budget' onPress={() => { console.log('btn pressed') }}
-                    containerStyle={styles.btnCalculate} buttonStyle={styles.btn}
+              ):
+              (
+                <View style={styles.outputView}>
+                    <Text>Estimated Budget Will Be Displayed Here</Text>
+                </View>
+              )
+            }
+            {
+              minTotal > 0 ?
+                <Button 
+                    title='Generate Plan Trip' 
+                    onPress={() => { console.log('btn pressed') }}
+                    containerStyle={styles.btnCont} buttonStyle={styles.btn}
+                    disabled={displayGenerateButton}
                 />
+               :
+                <></>
+            }
+            {/* {
+              luxury.length > 0 && budget.length >0 ?
+              <TripPlanTable persons={values.persons} display = {displayTripTable} luxuryTotal={maxTotal} budgetTotal={minTotal} luxury={luxury} budget={budget}/>:
+              <></>
+            } */}
+                <View className=" mt-3">
+
+                    <Button 
+                        title='Plan Another Trip' 
+                        onPress={reset}
+                        containerStyle={styles.btnCheckCont} buttonStyle={styles.btnCheck}
+                            
+                    />
+                
+                </View>
+  
             </View>
-
-            {/* Budget Calculate Output */}
-            <View style={styles.outputView}>
-                <Text>Minimum Budget: 24000 PKR</Text>
-                <Text>Maximum Budget: 50000 PKR</Text>
-            </View>
-
-
-            {/* Generate Planm Button */}
-            <Button title='Generate Trip Plan' onPress={() => { console.log('btn pressed') }}
-                containerStyle={styles.btnGenerateCont} buttonStyle={styles.btnGenerate}
-            />
-
-        </ScrollView>
+            }
+            
+          </View>
+        </View>
+        )}
+      </Formik>
+      </ScrollView>
     )
 }
 
