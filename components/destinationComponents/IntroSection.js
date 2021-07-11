@@ -1,14 +1,44 @@
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Alert, Modal, StyleSheet, Text, View } from 'react-native'
 import { Button, Image, Rating } from 'react-native-elements'
+import { useDispatch, useSelector } from 'react-redux'
+import { rateDestination } from '../../store/actions/destinationActions'
+import { RATE_DESTINATION_RESET } from '../../store/constants/destinationsConstants'
 import { imagePath } from '../supportComponents/axios'
 
 const IntroSection = (props) => {
+    const dispatch = useDispatch()
+
     const [userRating, setUserRating] = useState(0)
     const [modalVisible, setModalVisible] = useState(false);
 
+    const destinationRating = useSelector(state => state.rateDestination)
+    const { error, loading, success } = destinationRating
+
+    useEffect(() => {
+        if (success) {
+            alert(`You rated ${props.title} successfully`)
+            setUserRating(0)
+            dispatch({ type: RATE_DESTINATION_RESET })
+        }
+    }, [dispatch, success])
+
     const submitRating = () => {
+        dispatch(rateDestination(props._id, { rating: userRating }))
         setModalVisible(!modalVisible)
+    }
+
+    const userInfo = useSelector(state => state.user.userInfo)
+
+    const handleRatingBtn = () => {
+        if (userInfo) {
+            setModalVisible(true)
+        } else {
+            Alert.alert(
+                "Not logged in",
+                "Please log in to review this trip"
+            );
+        }
     }
 
     return (
@@ -50,7 +80,7 @@ const IntroSection = (props) => {
                 <View style={styles.ratingBtnView}>
                     <Button title={`How much do you rate ${props.title}?`}
                         buttonStyle={styles.rateBtn}
-                        onPress={() => setModalVisible(true)} />
+                        onPress={handleRatingBtn} />
                 </View>
             </View>
 

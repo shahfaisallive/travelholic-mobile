@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, View, StyleSheet, Text, ScrollView, LogBox } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Divider } from 'react-native-elements'
 import { listTripDetails } from '../../store/actions/tripActions'
 
 // Importing screen components
@@ -13,7 +12,6 @@ import ReviewSection from '../../components/tripComponents/ReviewSection'
 
 const TripDetailsScreen = ({ route, navigation }) => {
     const tripID = route.params.tripID
-
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -28,19 +26,17 @@ const TripDetailsScreen = ({ route, navigation }) => {
     const tripDetails = useSelector(state => state.tripDetails)
     const { loading, trip, error } = tripDetails
 
-    return (
+    return (loading ? (<ActivityIndicator size='large' color='#1A936F' style={{ marginTop: 260 }} />) : (
         <View style={styles.container}>
-            {loading ? (
-                <ActivityIndicator size='large' color='#1A936F' style={{ marginTop: 260 }} />) : (
-                <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-                    <TripIntro trip={trip} navigation={navigation} />
-                    <Itinerary trip={trip} />
-                    <TabDetails trip={trip} />
-                    <ReviewSection trip={trip} />
-                </ScrollView>
-            )}
-
+            <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+                <TripIntro trip={trip} navigation={navigation} loading={loading} />
+                <Itinerary trip={trip} />
+                <TabDetails trip={trip} />
+                <ReviewSection trip={trip} />
+            </ScrollView>
         </View>
+    )
+
     )
 }
 

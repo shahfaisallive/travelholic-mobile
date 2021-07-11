@@ -3,19 +3,20 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ToastAndroid } from 'react-native'
-import { persistStore,persistReducer } from 'redux-persist';
+import { persistStore, persistReducer } from 'redux-persist';
 
 // Importing reducers
-import { destinationDetailsReducer, getDestinationsReducer } from "./reducers/destinationReducers"
-import { bookingInfoReducer, tripDetailsReducer, tripListReducer } from './reducers/tripReducers'
+import { destinationDetailsReducer, getDestinationsReducer, rateDestinationReducer } from "./reducers/destinationReducers"
+import { bookedTripReducer, bookingInfoReducer, createBookingReducer, paymentMethodReducer, tripCreateReviewReducer, tripDetailsReducer, tripListReducer } from './reducers/tripReducers'
 import { loginReducer } from './reducers/userReducers'
 
-let userInfoFromStorage 
+let userInfoFromStorage
 async function fetchData() {
-           
+
     try {
         const value = await AsyncStorage.getItem('user')
         if (value !== null) {
+
           userInfoFromStorage=value
         //   ToastAndroid.show(
         //     value,
@@ -24,39 +25,35 @@ async function fetchData() {
         // );
         }
         else {
-            userInfoFromStorage=null
+            userInfoFromStorage = null
         }
-      } catch(e) {
-        userInfoFromStorage=null
+    } catch (e) {
+        userInfoFromStorage = null
         // error reading value
-      }
+    }
 };
 fetchData();
 
-
-// const reducer = combineReducers({
-//     login:loginReducer,
-//     destinationsList: getDestinationsReducer,
-//     destinationDetails: destinationDetailsReducer,
-//     tripList: tripListReducer,
-//     tripDetails: tripDetailsReducer,
-//     bookingInfo: bookingInfoReducer
-// })
-
 const rootReducer = combineReducers({
-    user:loginReducer,
+    user: loginReducer,
     destinationsList: getDestinationsReducer,
     destinationDetails: destinationDetailsReducer,
     tripList: tripListReducer,
     tripDetails: tripDetailsReducer,
-    bookingInfo: bookingInfoReducer
+    bookingInfo: bookingInfoReducer,
+    bookingDetails: createBookingReducer,
+    bookedTrip: bookedTripReducer,
+    paymentMethod: paymentMethodReducer,
+    tripCreateReview: tripCreateReviewReducer,
+    rateDestination: rateDestinationReducer
+
 })
 
-const persistConfig ={
-    key:'root',
-    storage:AsyncStorage,
-    whitelist:["user"]
-} 
+const persistConfig = {
+    key: 'root',
+    storage: AsyncStorage,
+    whitelist: ["user"]
+}
 
 const initialState = {
     user: { userInfo: userInfoFromStorage }
@@ -66,7 +63,7 @@ const middleware = [thunk]
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-export const store = createStore(persistedReducer,initialState, composeWithDevTools(applyMiddleware(...middleware)))
+export const store = createStore(persistedReducer, initialState, composeWithDevTools(applyMiddleware(...middleware)))
 
-export const persistor = persistStore(store) 
+export const persistor = persistStore(store)
 

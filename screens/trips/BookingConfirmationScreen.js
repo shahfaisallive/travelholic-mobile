@@ -1,15 +1,39 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button } from 'react-native-elements'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { createBooking } from '../../store/actions/tripActions'
 
 const BookingConfirmationScreen = ({ navigation }) => {
+    const dispatch = useDispatch()
 
     const bookingInfo = useSelector(state => state.bookingInfo)
-    const { title, name, price, email, total_price, seats, phoneNo, address, city } = bookingInfo
+    const { title, name,price, email, total_price, seats, phoneNo, address, city } = bookingInfo
+
+    const bookingDetails = useSelector(state => state.bookingDetails)
+    const { loading, booking, success } = bookingDetails
+
+    useEffect(() => {
+        if (success) {
+            navigation.navigate('BookingStatus', {
+                bookingID: booking._id,
+            })
+        }
+    }, [success, booking])
 
     const confirmBooking = () => {
-        navigation.navigate('BookingStatus')
+        dispatch(createBooking({
+            title: title,
+            name: name,
+            email: email,
+            city: city,
+            address: address,
+            phoneNo: phoneNo,
+            seats: seats,
+            totalPrice: total_price,
+            // startDate: trip.start_date,
+            // endDate: trip.end_date
+        }))
     }
 
     return (
@@ -152,17 +176,18 @@ const styles = StyleSheet.create({
         flex: 1
     },
     totalRow: {
-        backgroundColor: '#1A936F',
+        backgroundColor: '#114B5F',
         flexDirection: 'row',
         padding: 12,
     },
     confirmBtnCont: {
-        width: '95%',
+        width: '100%',
         marginTop: 30,
-        alignSelf: 'center'
+        alignSelf: 'center',
     },
     confirmBtn: {
-        backgroundColor: '#114B5F'
+        backgroundColor: '#1A936F',
+        height: 45
     }
 
 })
