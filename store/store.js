@@ -17,11 +17,11 @@ async function fetchData() {
         const value = await AsyncStorage.getItem('user')
         if (value !== null) {
           userInfoFromStorage=value
-          ToastAndroid.show(
-            value,
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM
-        );
+        //   ToastAndroid.show(
+        //     value,
+        //     ToastAndroid.LONG,
+        //     ToastAndroid.BOTTOM
+        // );
         }
         else {
             userInfoFromStorage=null

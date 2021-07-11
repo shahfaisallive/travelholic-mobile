@@ -5,9 +5,14 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { Icon } from 'react-native-elements';
 import axios from "../../components/supportComponents/axios"
 
-
-
 const RoutePossibility = ({ navigation }) => {
+    
+    const [fromPickerOpen, setFromPickerOpen] = useState(false)
+    const [fromValue, setFromValue] = useState(null)
+    const [toValue, setToValue] = useState(null)
+    const [output, setOutput] = useState('')
+    const [toPickerOpen, setToPickerOpen] = useState(false)
+    const [destinations, setDestinations] = useState([])
 
     useEffect(()=>{
         setOutput('')
@@ -46,12 +51,6 @@ const RoutePossibility = ({ navigation }) => {
 			})
 		}
 	}
-    const [fromPickerOpen, setFromPickerOpen] = useState(false)
-    const [fromValue, setFromValue] = useState(null)
-    const [toValue, setToValue] = useState(null)
-    const [output, setOutput] = useState('')
-    const [toPickerOpen, setToPickerOpen] = useState(false)
-    const [destinations, setDestinations] = useState([])
     
 
     return (
