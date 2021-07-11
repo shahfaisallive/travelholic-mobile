@@ -7,7 +7,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 
 // Importing reducers
 import { destinationDetailsReducer, getDestinationsReducer, rateDestinationReducer } from "./reducers/destinationReducers"
-import { bookedTripReducer, bookingInfoReducer, createBookingReducer, paymentMethodReducer, tripCreateReviewReducer, tripDetailsReducer, tripListReducer } from './reducers/tripReducers'
+import { bookedTripReducer, bookingInfoReducer, cancelBookingReducer, createBookingReducer, paymentMethodReducer, tripCreateReviewReducer, tripDetailsReducer, tripListReducer, userBookingsReducer } from './reducers/tripReducers'
 import { loginReducer } from './reducers/userReducers'
 
 let userInfoFromStorage
@@ -44,8 +44,9 @@ const rootReducer = combineReducers({
     bookedTrip: bookedTripReducer,
     paymentMethod: paymentMethodReducer,
     tripCreateReview: tripCreateReviewReducer,
-    rateDestination: rateDestinationReducer
-
+    rateDestination: rateDestinationReducer,
+    cancelBooking: cancelBookingReducer,
+    userBookings: userBookingsReducer
 })
 
 const persistConfig = {

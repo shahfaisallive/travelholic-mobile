@@ -1,5 +1,5 @@
 import axios from "../../components/supportComponents/axios"
-import { TRIP_LIST_REQUEST, TRIP_LIST_SUCCESS, TRIP_LIST_FAIL, TRIP_DETAILS_REQUEST,SAVE_PAYMENT_METHOD, TRIP_DETAILS_SUCCESS, TRIP_DETAILS_FAIL, TRIP_CREATE_REVIEW_REQUEST, TRIP_CREATE_REVIEW_SUCCESS, TRIP_CREATE_REVIEW_FAIL, SAVE_BOOKING_INFO, CONFIRM_BOOKING_REQUEST, CONFIRM_BOOKING_SUCCESS, CONFIRM_BOOKING_FAIL,GET_BOOKED_TRIP_SUCCESS, GET_BOOKED_TRIP_FAIL, GET_BOOKED_TRIP_REQUEST, } from '../constants/tripConstants'
+import { TRIP_LIST_REQUEST, TRIP_LIST_SUCCESS, TRIP_LIST_FAIL, TRIP_DETAILS_REQUEST,SAVE_PAYMENT_METHOD, TRIP_DETAILS_SUCCESS, TRIP_DETAILS_FAIL, TRIP_CREATE_REVIEW_REQUEST, TRIP_CREATE_REVIEW_SUCCESS, TRIP_CREATE_REVIEW_FAIL, SAVE_BOOKING_INFO, CONFIRM_BOOKING_REQUEST, CONFIRM_BOOKING_SUCCESS, CONFIRM_BOOKING_FAIL,GET_BOOKED_TRIP_SUCCESS, GET_BOOKED_TRIP_FAIL, GET_BOOKED_TRIP_REQUEST, CANCEL_BOOKING_SUCCESS, CANCEL_BOOKING_REQUEST, CANCEL_BOOKING_FAIL, GET_USER_BOOKINGS_FAIL, GET_USER_BOOKINGS_SUCCESS, GET_USER_BOOKINGS_REQUEST, } from '../constants/tripConstants'
 
 
 
@@ -147,6 +147,67 @@ export const createTripReview = (tripId, review) => async (dispatch, getState) =
             payload: error.response && error.response.data.message
                 ? error.response.data.message
                 : error.message,
+        })
+    }
+}
+
+
+export const cancelBooking = (bookingId) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: CANCEL_BOOKING_REQUEST
+        })
+
+        const { user: { userInfo } } = getState()
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const { data } = await axios.put(`/bookings/${bookingId}/cancel`, config)
+        // console.log(data)
+        dispatch({
+            type: CANCEL_BOOKING_SUCCESS,
+            payload: data
+        })
+
+    } catch (error) {
+        dispatch({
+            type: CANCEL_BOOKING_FAIL,
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message,
+        })
+    }
+}
+
+
+export const getUserBookings = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: GET_USER_BOOKINGS_REQUEST
+        })
+
+        const { user: { userInfo } } = getState()
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        const { data } = await axios.get(`/bookings/user/${id}`, config)
+        // console.log(data)
+        dispatch({
+            type: GET_USER_BOOKINGS_SUCCESS,
+            payload: data
+        })
+
+    } catch (error) {
+        dispatch({
+            type: GET_USER_BOOKINGS_FAIL,
+            payload: error.response && error.response.data.message ? error.response.data.message : error.message,
         })
     }
 }

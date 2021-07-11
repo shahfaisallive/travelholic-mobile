@@ -5,26 +5,25 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 
 // Importing screens
-import ForumScreen from "../screens/forum/ForumScreen"
-import AskQuestionScreen from '../screens/forum/AskQuestionScreen'
-import QuestionDetailsScreen from '../screens/forum/QuestionDetailsScreen'
-import TopicQuestionsScreen from '../screens/forum/TopicQuestionsScreen'
+import MyTripsScreen from "../screens/profile/MyTripsScreen"
+import BookingStatusScreen from '../screens/trips/BookingStatusScreen';
+
 
 // Importing components
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 
-
 const Stack = createStackNavigator();
 
-const ForumStackNavigation = ({ navigation }) => {
+const MyTripsStackNavigation = ({ navigation }) => {
+
     const homeButton = () => <TouchableOpacity
-    onPress={() => navigation.navigate("Home")}>
-    <Icon name='home' color='white' size={26} style={{ marginRight: 10 }} />
-</TouchableOpacity>
+        onPress={() => navigation.navigate("Home")}>
+        <Icon name='home' color='white' size={26} style={{ marginRight: 10 }} />
+    </TouchableOpacity>
 
     return (
         <Stack.Navigator
-            initialRouteName='Home'
+            initialRouteName='MyTrips'
             screenOptions={{
                 headerStyle: {
                     backgroundColor: '#114B5F',
@@ -35,40 +34,23 @@ const ForumStackNavigation = ({ navigation }) => {
             }}
         >
             <Stack.Screen
-                name="Forum"
-                component={ForumScreen}
+                name="MyTrips"
+                component={MyTripsScreen}
                 options={{
-                    title: 'Forum',
+                    title: 'My Trips',
                     headerLeft: () => <TouchableOpacity
                         style={styles.menuIcon} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
                         <Icon name='menu' color='white' size={28} />
-                    </TouchableOpacity>
-                }}
-            />
-
-            <Stack.Screen
-                name="AskQuestion"
-                component={AskQuestionScreen}
-                options={{
-                    title: 'Ask Question',
+                    </TouchableOpacity>,
                     headerRight: homeButton,
                 }}
             />
 
             <Stack.Screen
-                name="QuestionDetails"
-                component={QuestionDetailsScreen}
+                name="BookingStatus"
+                component={BookingStatusScreen}
                 options={{
-                    title: 'Details',
-                    headerRight: homeButton,
-                }}
-            />
-
-            <Stack.Screen
-                name="TopicQuestions"
-                component={TopicQuestionsScreen}
-                options={{
-                    title: 'Questions',
+                    title: 'Booking Status',
                     headerRight: homeButton,
                 }}
             />
@@ -84,4 +66,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ForumStackNavigation
+export default MyTripsStackNavigation

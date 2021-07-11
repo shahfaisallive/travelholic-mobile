@@ -8,10 +8,12 @@ const BookingConfirmationScreen = ({ navigation }) => {
     const dispatch = useDispatch()
 
     const bookingInfo = useSelector(state => state.bookingInfo)
-    const { title, name,price, email, total_price, seats, phoneNo, address, city } = bookingInfo
+    const { title, name, price, email, total_price, seats, phoneNo, address, city } = bookingInfo
 
     const bookingDetails = useSelector(state => state.bookingDetails)
     const { loading, booking, success } = bookingDetails
+
+    const trip = useSelector(state => state.tripDetails.trip)
 
     useEffect(() => {
         if (success) {
@@ -31,8 +33,8 @@ const BookingConfirmationScreen = ({ navigation }) => {
             phoneNo: phoneNo,
             seats: seats,
             totalPrice: total_price,
-            // startDate: trip.start_date,
-            // endDate: trip.end_date
+            startDate: trip.start_date,
+            endDate: trip.end_date
         }))
     }
 

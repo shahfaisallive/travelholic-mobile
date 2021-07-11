@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react'
-import { TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { TouchableOpacity, Alert } from 'react-native'
+import { Modal } from 'react-native'
 import { ScrollView, StyleSheet, Text, View, ActivityIndicator, Image } from 'react-native'
-import { Divider } from 'react-native-paper'
+import { Button } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
-import { getBookedTrip, savePaymentMethod } from '../../store/actions/tripActions'
+import { cancelBooking, getBookedTrip, savePaymentMethod } from '../../store/actions/tripActions'
+import { CANCEL_BOOKING_RESET } from '../../store/constants/tripConstants'
 
 const BookingStatusScreen = ({ route }) => {
     const bookingID = route.params.bookingID
@@ -28,10 +30,41 @@ const BookingStatusScreen = ({ route }) => {
         dispatch(savePaymentMethod('cod'))
     }
 
+    const cancelBookingSuccess = useSelector(state => state.cancelBooking.success)
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const cancelBookingHandler = async () => {
+        await dispatch(cancelBooking(booking._id))
+        if (cancelBookingSuccess) {
+            Alert.alert(
+                "Booking Cancelled",
+                "You have cancelled your booking successfully"
+            );
+            dispatch({ type: CANCEL_BOOKING_RESET })
+        }
+        setModalVisible(false)
+    }
+
+    const handleCancelBtn = () => {
+        if (userInfo) {
+            setModalVisible(true)
+        } else {
+            Alert.alert(
+                "Not logged in",
+                "It seems you are not logged in"
+            );
+        }
+    }
+
     return (loading ? (<ActivityIndicator size='large' color='#1A936F' style={{ marginTop: 260 }} />) : (
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
             <View style={styles.topView}>
-                {!booking.booking_confirmed ? (
+                {booking.booking_status === 'cancelled' ? (
+                    <Text style={styles.text4}>
+                        Your Booking is Cancelled
+                    </Text>
+                ) : booking.booking_status === 'pending' ? (
                     <>
                         {!booking.isPaid ? (
                             <>
@@ -47,7 +80,7 @@ const BookingStatusScreen = ({ route }) => {
                                 <Text style={styles.text1}>
                                     Your Payment is Complete
                                 </Text>
-                                {booking.booking_confirmed ? (
+                                {booking.booking_status === 'confirmed' ? (
                                     <Text>
                                         Your booking has been confirmed
                                     </Text>
@@ -160,40 +193,97 @@ const BookingStatusScreen = ({ route }) => {
 
                 <Text style={styles.text3}>Booking Status</Text>
                 <View style={styles.rowView}>
-                    {booking.booking_confirmed ? <Text style={styles.greenText}>CONFIRMED</Text> : <Text style={styles.redText}>PENDING</Text>}
+                    {
+                        booking.booking_status === 'confirmed' ? <Text style={styles.greenText}>CONFIRMED</Text> :
+                            booking.booking_status === 'pending' ? <Text style={styles.redText}>PENDING</Text> :
+                                booking.booking_status === 'cancelled' ? <Text style={styles.redText}>CANCELLED</Text> :
+                                    <Text>NULL</Text>
+                    }
                 </View>
             </View>
 
+
+            {/* Payment Section */}
             <View style={styles.bookingDetailView}>
-                <Text style={styles.text3}>Payment Procedure</Text>
-                <View style={styles.paymentMethodView}>
-                    <TouchableOpacity onPress={setPaymentToStripe} style={styles.payMethodLogoView}>
-                        <Image source={require('../../assets/images/stripe.png')} style={styles.paymentMethodLogo} />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={setPaymentToCod} style={styles.payMethodLogoView}>
-                        <Image source={require('../../assets/images/cod.png')} style={styles.paymentMethodLogo} />
-                    </TouchableOpacity>
-                </View>
-
-                {paymentMethod === 'stripe' && !booking.isPaid ? (
-                    <View style={styles.paymentFormView}>
-                        <Text>Stripe form</Text>
-                    </View>
-                ) : paymentMethod === 'cod' && !booking.isPaid ? (
-                    <View style={styles.paymentFormView}>
-                        <Text>Cash On Delivery</Text>
-                    </View>
-                ) : !booking.isPaid ? (
-                    <View style={styles.paymentFormView}>
-                        <Text>Please select a payment method to proceed payment</Text>
-                    </View>
+                {booking.booking_status === 'cancelled' ? (
+                    <View></View>
                 ) : (
-                    <View style={styles.paymentFormView}>
-                        <Text>Your payment is complete</Text>
+                    <View>
+                        {!booking.isPaid ? (
+                            <Text style={styles.text3}>Payment Procedure</Text>
+
+                        ) : null}
+                        {booking.isPaid ? (
+                            <Text style={styles.text5}>
+                                Your payment is completed
+                            </Text>
+                        ) : (
+                            <>
+                                <View style={styles.paymentMethodView}>
+                                    <TouchableOpacity onPress={setPaymentToStripe} style={styles.payMethodLogoView}>
+                                        <Image source={require('../../assets/images/stripe.png')} style={styles.paymentMethodLogo} />
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity onPress={setPaymentToCod} style={styles.payMethodLogoView}>
+                                        <Image source={require('../../assets/images/cod.png')} style={styles.paymentMethodLogo} />
+                                    </TouchableOpacity>
+                                </View>
+
+                                {paymentMethod === 'stripe' && !booking.isPaid ? (
+                                    <View style={styles.paymentFormView}>
+                                        <Text>Stripe form</Text>
+                                        
+                                    </View>
+                                ) : paymentMethod === 'cod' && !booking.isPaid ? (
+                                    <View style={styles.paymentFormView}>
+                                        <Text>Cash On Delivery</Text>
+                                    </View>
+                                ) : !booking.isPaid ? (
+                                    <View style={styles.paymentFormView}>
+                                        <Text>Please select a payment method to proceed payment</Text>
+                                    </View>
+                                ) : (
+                                    <View style={styles.paymentFormView}>
+                                        <Text>Your payment is complete</Text>
+                                    </View>
+                                )}
+                            </>
+                        )}
+
                     </View>
                 )}
 
+                {/* Cancel Booking Button */}
+                {booking.booking_status === 'cancelled' ? null :
+                    <Button title={'Cancel Booking'} onPress={handleCancelBtn}
+                        containerStyle={styles.cancelBtnCont} buttonStyle={styles.cancelBtn}
+                        loading={false} />
+                }
+
+                {/* Confirmation Model */}
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.text1}>Do you want to cancel this booking?</Text>
+                            <View style={{ flexDirection: 'row', paddingLeft: 200 }}>
+                                <Button title='No'
+                                    buttonStyle={styles.noBtn}
+                                    onPress={() => setModalVisible(false)} />
+
+                                <Button title='Yes'
+                                    buttonStyle={styles.cancelBtnConfirm}
+                                    onPress={cancelBookingHandler} />
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </View>
 
         </ScrollView>
@@ -226,6 +316,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 5,
         marginTop: 7
+    },
+    text4: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: 'red',
+        marginBottom: 4
+    },
+    text5: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: 'green',
+        marginBottom: 20,
+        textAlign: 'center',
+        marginTop: 10
     },
     bookingDetailView: {
         backgroundColor: 'white',
@@ -291,7 +395,56 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5F0F1',
         marginTop: 10,
         padding: 10,
-        marginBottom: 20
+        marginBottom: 20,
+    },
+    cancelBtnCont: {
+        width: '100%',
+        marginBottom: 20,
+        alignSelf: 'center',
+    },
+    cancelBtn: {
+        backgroundColor: '#D50C0C',
+        height: 45
+    },
+
+    //Rating Modal styles
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 0
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "#F3F5ED",
+        borderRadius: 10,
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '#6E6F69',
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    cancelBtnConfirm: {
+        borderRadius: 10,
+        backgroundColor: '#D50C0C',
+        marginTop: 20,
+        marginLeft: 10,
+        width: 60
+    },
+    noBtn: {
+        backgroundColor: '#114B5F',
+        borderRadius: 10,
+        marginTop: 20,
+        width: 60
     }
 
 })

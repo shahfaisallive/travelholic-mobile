@@ -15,6 +15,7 @@ import TabNavigation from "./TabNavigation"
 import AuthenticateStack from "./AuthenticateStackNavigation"
 import ProfileStack from './ProfileStackNavigation';
 import SettingsStack from './SettingsStackNavigation';
+import MyTripsStack from './MyTripsStackNavigation';
 
 const Drawer = createDrawerNavigator();
 
@@ -35,6 +36,8 @@ const DrawerNavigation = ({ navigation }) => {
                 options={{ headerStyle: { backgroundColor: '#114B5F' }, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center' }} />
             <Drawer.Screen name='Feedback' component={Feedback}
                 options={{ headerStyle: { backgroundColor: '#114B5F' }, headerShown: true, headerTintColor: '#fff', headerTitleAlign: 'center' }} />
+            <Drawer.Screen name='MyTrips' component={MyTripsStack}
+                options={{ headerStyle: { backgroundColor: '#114B5F' }, headerShown: false, headerTintColor: '#fff', headerTitleAlign: 'center' }} />
             <Drawer.Screen name='Settings' component={SettingsStack} />
 
         </Drawer.Navigator>

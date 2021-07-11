@@ -1,5 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import HTML from "react-native-render-html";
+
 
 const Itinerary = ({ trip }) => {
     const itinerary = trip.itinerary
@@ -13,7 +15,7 @@ const Itinerary = ({ trip }) => {
             {!itinerary ? null : itinerary.map(item => (
                 <View key={item._id}>
                     <Text style={styles.dayHeading}>Day {item.day}:</Text>
-                    <Text style={styles.description}>{item.description}</Text>
+                    <HTML source={{ html: item.description }} baseFontStyle={styles.description} />
                 </View>
             ))}
         </View>
@@ -27,7 +29,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         paddingHorizontal: 10,
         paddingBottom: 10
-    },  
+    },
     heading: {
         fontSize: 20,
         fontWeight: 'bold',
