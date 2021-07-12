@@ -16,13 +16,13 @@ const ForumScreen = ({ navigation }) => {
         setLoading(true)
         axios.get('/questions/')
             .then(res => {
-                // console.log(res.data);
+
                 setQuestions(res.data);
                 setLoading(false)
             })
             .catch((err) => {
                 setLoading(false)
-                console.log(err);
+
             });
             LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
@@ -36,17 +36,25 @@ const ForumScreen = ({ navigation }) => {
 
                 {/* Trending Topics */}
                 <View style={styles.topicsView}>
+                
                     <View style={styles.singleTopicView}>
-                        <Image source={require('../../assets/images/Transport.jpg')} style={styles.topicImage} />
-                        <Text style={styles.text1}>Transport</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('TopicQuestions', {topic: "Transport"})}>
+                            <Image source={require('../../assets/images/Transport.jpg')} style={styles.topicImage} />
+                            <Text style={styles.text1}>Transport</Text>
+                        </TouchableOpacity>
+                    </View>
+                    
+                    <View style={styles.singleTopicView}>
+                        <TouchableOpacity onPress={() => navigation.navigate('TopicQuestions', {topic: "Accomodations"})}>
+                            <Image source={require('../../assets/images/Accomodations.jpg')} style={styles.topicImage} />
+                            <Text style={styles.text1}>Accomodations</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.singleTopicView}>
-                        <Image source={require('../../assets/images/Accomodations.jpg')} style={styles.topicImage} />
-                        <Text style={styles.text1}>Accomodations</Text>
-                    </View>
-                    <View style={styles.singleTopicView}>
-                        <Image source={require('../../assets/images/Budget.jpg')} style={styles.topicImage} />
-                        <Text style={styles.text1}>Budget</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('TopicQuestions', {topic: "Budget"})}>  
+                            <Image source={require('../../assets/images/Budget.jpg')} style={styles.topicImage} />
+                            <Text style={styles.text1}>Budget</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <Divider />

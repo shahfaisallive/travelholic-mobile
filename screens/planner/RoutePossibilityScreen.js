@@ -32,7 +32,7 @@ const RoutePossibility = ({ navigation }) => {
     },[])
 
     const checkRoute = (e)=> {
-		e.preventDefault()
+
 		if (toValue === undefined || fromValue === undefined ||toValue === ''|| fromValue === ''){
             ToastAndroid.show(
                 'Please Select Your Destinations',
