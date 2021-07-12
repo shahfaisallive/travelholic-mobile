@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     singleQuestionView: {
         flexDirection: 'row',
         // borderWidth: 0.4,
-        // borderRadius: 7,
+        borderRadius: 7,
         // borderColor: '#114B5F',
         // borderStyle: 'solid',
         backgroundColor: '#D6DCDC',
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5
     },
     profileImage: {
-        width: '90%',
+        width: '85%',
         height: 50,
         resizeMode: 'contain',
         borderRadius: 10,
