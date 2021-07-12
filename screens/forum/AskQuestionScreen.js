@@ -110,12 +110,6 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: 'center'
     },
-    text1: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 6,
-        marginTop: 5
-    },
     pickerStyle: {
         width: '90%',
         marginTop: 10
@@ -133,17 +127,6 @@ const styles = StyleSheet.create({
     },
     btnCheck: {
         backgroundColor: '#1A936F'
-    },
-    input: {
-        paddingTop:20,
-        width: '95%',
-        borderWidth: 0.5,
-        borderColor: "transparent" 
-    },
-    inputStyle: {
-        fontSize: 17,
-        backgroundColor:"white",
-        borderWidth:0
     },
     textInput: {
         height: 80,

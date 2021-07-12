@@ -60,42 +60,9 @@ const TopicQuestionsScreen = ({route,navigation}) => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        marginBottom: 50
-    },
-    topicsView: {
-        flexDirection: 'row',
-        marginTop: 15,
-        marginHorizontal: 10,
-        marginBottom: 15,
-        paddingHorizontal: 10
-    },
-    heading1: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginTop: 15
-    },
-    text1: {
-        fontWeight: 'bold',
-        fontSize: 15,
-        textAlign: 'center'
-    },
     text2: {
         fontWeight: 'bold',
         fontSize: 14,
-    },
-    topicImage: {
-        width: '100%',
-        height: 80,
-        resizeMode: 'contain',
-        borderRadius: 10,
-        borderColor: 'green',
-        borderWidth: 0.5
-    },
-    singleTopicView: {
-        width: '31%',
-        marginRight: 12
     },
     allQuestionsConatiner: {
         paddingTop: 20,
@@ -133,15 +100,6 @@ const styles = StyleSheet.create({
         color: 'grey',
         marginTop: 5
     },
-    askBtnCont: {
-        width: '90%',
-        marginTop: 20,
-        alignSelf: 'center',
-    },
-    askBtn: {
-        backgroundColor: '#114B5F',
-        height: 45
-    }
 })
 
 export default TopicQuestionsScreen
