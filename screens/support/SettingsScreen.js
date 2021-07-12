@@ -1,9 +1,23 @@
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Text, View, StyleSheet, Image } from 'react-native'
+import axios from "../../components/supportComponents/axios"
+import { useDispatch,useSelector } from 'react-redux'
 
 
 const SettingsScreen = ({ navigation }) => {
+
+    const userInfo = useSelector(state => state.user.userInfo)
+    const dispatch = useDispatch()
+    const deleteProfile = () => {
+		axios.delete(`/users/${userInfo._id}`)
+        .then(res => {
+            dispatch(userLogout())
+        })
+        .catch(err => {
+            console.log(err)
+        })
+	}
 
     return (
         <View style={styles.container}>
@@ -13,7 +27,7 @@ const SettingsScreen = ({ navigation }) => {
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={deleteProfile}>
                 <View style={styles.deleteView}>
                     <Text style={styles.text}>Delete Account</Text>
                 </View>

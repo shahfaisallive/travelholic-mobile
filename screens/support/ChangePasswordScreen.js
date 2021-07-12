@@ -1,12 +1,38 @@
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, Image } from 'react-native'
+import { View, StyleSheet, Image,ToastAndroid } from 'react-native'
 import { Button, Input } from 'react-native-elements'
+import { useSelector } from 'react-redux'
+import axios from "../../components/supportComponents/axios"
 
 const ChangePasswordScreen = () => {
 
-    const [currentPass, setCurrentPass] = useState('')
-    const [newPass, setNewPass] = useState('')
-    const [confirmPass, setConfirmPass] = useState('')
+    const [currentPassword, setCurrentPass] = useState('')
+    const [newPassword, setNewPass] = useState('')
+    const [newPasswordConfirm, setConfirmPass] = useState('')
+    const [submitLoader, setSubmitLoader] = useState(false)
+    const userInfo = useSelector(state => state.user.userInfo)
+
+    const updatePassword = (e) => {
+        setSubmitLoader(true)
+		axios.put(`/users/password/${userInfo._id}`, { currentPassword, newPassword, newPasswordConfirm })
+        .then(res => {
+            ToastAndroid.show(
+                'Password Updated',
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM
+            );
+            setSubmitLoader(false)
+        })
+        .catch(err => {
+            console.log(err)
+            ToastAndroid.show(
+                'Error',
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM
+            );
+            setSubmitLoader(false)
+        })
+	}
 
     return (
         <View style={styles.container}>
@@ -14,21 +40,24 @@ const ChangePasswordScreen = () => {
                 label='Current Password' labelStyle={styles.inputlabel}
                 onChangeText={currentPass => setCurrentPass(currentPass)}
                 containerStyle={styles.input} inputStyle={styles.inputStyle}
+                secureTextEntry={true}
             />
 
             <Input
                 label='New Password' labelStyle={styles.inputlabel}
                 onChangeText={newPass => setNewPass(newPass)}
                 containerStyle={styles.input} inputStyle={styles.inputStyle}
+                secureTextEntry={true}
             />
 
             <Input
                 label='Confirm New Password' labelStyle={styles.inputlabel}
                 onChangeText={confirmPass => setConfirmPass(confirmPass)}
                 containerStyle={styles.input} inputStyle={styles.inputStyle}
+                secureTextEntry={true}
             />
 
-            <Button title='Change Password' onPress={() => { }} buttonStyle={styles.updateBtn} />
+            <Button title='Change Password' onPress={updatePassword} buttonStyle={styles.updateBtn} loading={submitLoader ? true : false}/>
         </View>
     )
 }
