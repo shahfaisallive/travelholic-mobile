@@ -9,6 +9,7 @@ const TopicQuestionsScreen = ({route,navigation}) => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
+        navigation.setOptions({ title: `${route.params.topic} Questions` })
         setLoading(true)
         axios.get(`/questions/topic/${route.params.topic}`)
         .then(res => {
@@ -26,9 +27,9 @@ const TopicQuestionsScreen = ({route,navigation}) => {
   
     return (
         <ScrollView>
-             <Text style={styles.heading1}>{`${route.params.topic} Questions`}</Text>
                 <View style={styles.allQuestionsConatiner}>
-                    {loading ? (<ActivityIndicator size='large' color='#1A936F' style={{ marginTop: 50 }} />) : (
+                    {loading ? (<ActivityIndicator size='large' color='#1A936F' style={{ marginTop: 50 }} />) : 
+                    questions.length !== 0 ? (
                         <FlatList
                             showsVerticalScrollIndicator={false}
                             data={questions}
@@ -53,7 +54,7 @@ const TopicQuestionsScreen = ({route,navigation}) => {
                                 </TouchableOpacity>
                             )}
                         />
-                    )}
+                    ) : null }
                 </View>
         </ScrollView>
     )
@@ -63,6 +64,10 @@ const styles = StyleSheet.create({
     text2: {
         fontWeight: 'bold',
         fontSize: 14,
+    },
+    heading1: {
+        fontSize: 20,
+        fontWeight: 'bold'
     },
     allQuestionsConatiner: {
         paddingTop: 20,

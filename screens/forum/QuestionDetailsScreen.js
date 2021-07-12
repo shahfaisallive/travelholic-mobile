@@ -1,30 +1,86 @@
 import React, { useEffect, useState } from 'react'
 import axios, { imagePath } from "../../components/supportComponents/axios"
-import { Text, View, StyleSheet, Image, ActivityIndicator } from 'react-native'
-import DropDownPicker from 'react-native-dropdown-picker';
-
+import { ScrollView, Text, View, StyleSheet, Image, ActivityIndicator, FlatList, TextInput } from 'react-native'
+import { Divider, Button } from 'react-native-elements';
+import { useSelector } from 'react-redux';
+import { Alert } from 'react-native';
+import AnswerCard from '../../components/forumComponents/AnswerCard';
 
 const QuestionDetailsScreen = ({ route }) => {
+    const [refreshPage, setRefreshPage] = useState("");
+
     const questionID = route.params.questionID
     const [question, setQuestion] = useState({})
+    const [answers, setAnswers] = useState([])
     const [loading, setLoading] = useState(false)
+    const [submitLoader, setSubmitLoader] = useState(false)
+    const [answerText, setAnswerText] = useState('')
+
+    const userInfo = useSelector(state => state.user.userInfo)
 
     useEffect(() => {
         setLoading(true)
         axios.get(`/questions/question/${questionID}`)
             .then(res => {
-                console.log(res.data);
+                // console.log(res.data);
                 setQuestion(res.data);
                 setLoading(false)
             })
             .catch((err) => {
-                setLoading(false)
                 console.log(err);
+                setLoading(false)
             });
+
+        if (question) {
+            setLoading(true)
+            axios.get(`answers/questions/${questionID}`)
+                .then(res => {
+                    // console.log('answers', res.data)
+                    setAnswers(res.data);
+                    setLoading(false)
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setLoading(false)
+                });
+        }
     }, [])
 
+    const submitAnswerHandler = () => {
+        if (answerText !== '') {
+            if (userInfo) {
+                setSubmitLoader(true)
+                axios.post(`/answers/`, { user: userInfo._id, question: questionID, text: answerText })
+                    .then(res => {
+                        setAnswerText('')
+                        Alert.alert(
+                            "Success",
+                            "Answer posted successfuly!"
+                        )
+                        setSubmitLoader(false)
+                        setRefreshPage('refresh')
+                    })
+            } else {
+                Alert.alert(
+                    "Not logged in",
+                    "Please log in to submit an answer"
+                );
+                setSubmitLoader(false)
+            }
+        } else {
+            Alert.alert(
+                "Empty Fields",
+                "Please fill in the required field before submitting"
+            );
+        }
+
+    }
+
+
     return (loading ? (<ActivityIndicator size='large' color='#1A936F' style={{ marginTop: 260 }} />) : (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
+
+            {/* Question View */}
             <View style={{ flexDirection: 'column' }}>
                 <View style={styles.singleQuestionView}>
                     {question.user ? (
@@ -45,22 +101,54 @@ const QuestionDetailsScreen = ({ route }) => {
                     </View>
                 </View>
             </View>
-        </View>
+            <Divider />
+
+            <View style={{ marginBottom: 10 }}>
+                {/* Answers Below */}
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={answers}
+                    keyExtractor={item => item._id}
+                    initialNumToRender={4}
+                    renderItem={itemData => (
+                        <AnswerCard itemData={itemData} id={itemData.item._id}
+                            answerUserID={itemData.item.user._id} loggedInUser={userInfo._id} />
+                    )}
+                />
+            </View>
+
+            <Divider />
+
+            {/* Answer Question Form */}
+            <Text style={styles.heading}>Answer this Question</Text>
+            <View style={styles.answerFormView}>
+                <TextInput
+                    style={styles.textInput} value={answerText}
+                    onChangeText={answerText => setAnswerText(answerText)}
+                    multiline={true} numberOfLines={6} placeholder='Type your answer...'
+                />
+
+                {!submitLoader ? (
+                    <Button title={'SUBMIT ANSWER'} onPress={submitAnswerHandler}
+                        containerStyle={styles.btnCont} buttonStyle={styles.btn}
+                    />
+                ) : (
+                    <ActivityIndicator style={styles.btnCont} size="large" color="#1A936F" />
+                )}
+            </View>
+        </ScrollView>
     ))
 }
 
+
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 50,
         paddingHorizontal: 10,
         paddingTop: 20
     },
     singleQuestionView: {
         flexDirection: 'row',
-        // borderWidth: 0.4,
         borderRadius: 7,
-        // borderColor: '#114B5F',
-        // borderStyle: 'solid',
         backgroundColor: '#D6DCDC',
         paddingVertical: 5,
         marginBottom: 10
@@ -73,6 +161,12 @@ const styles = StyleSheet.create({
     text2: {
         fontWeight: 'bold',
         fontSize: 16,
+    },
+    heading: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: '#114B5F',
+        marginTop: 7
     },
     profileImageView: {
         width: '17%',
@@ -96,7 +190,31 @@ const styles = StyleSheet.create({
         color: 'grey',
         marginTop: 5
     },
-
+    answerFormView: {
+        marginTop: 8,
+    },
+    textInput: {
+        height: 80,
+        // margin: 12,
+        borderWidth: 0.5,
+        borderColor: 'grey',
+        width: '100%',
+        paddingHorizontal: 5,
+        paddingVertical: 5,
+        borderRadius: 5,
+        textAlignVertical: 'top',
+        backgroundColor: "white"
+    },
+    btnCont: {
+        width: '50%',
+        marginTop: 20,
+        alignSelf: 'center',
+        marginBottom: 50
+    },
+    btn: {
+        backgroundColor: '#114B5F',
+        height: 45
+    }
 })
 
 export default QuestionDetailsScreen

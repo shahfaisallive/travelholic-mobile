@@ -26,7 +26,7 @@ const RegisterScreen = ({ navigation }) => {
                 if (state.isConnected) {
                     axios.post('/users',{name,email,password,mobile_num})
                     .then(res=>{
-                        console.log(res.data)
+                        // console.log(res.data)
                         Alert.alert('You Have Been Registered, Please Check Your Email')
                         setName('')
                         setEmail('')

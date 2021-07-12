@@ -19,7 +19,7 @@ const RoutePossibility = ({ navigation }) => {
         axios.get('/tripplannerdestination/')
 		.then(res=>{
             setDestinations([])
-			console.log(res.data)
+			// console.log(res.data)
             res.data.forEach((element)=>{
                 setDestinations((curr)=>{
                     return[{label:element.name,value:element._id},...curr]
