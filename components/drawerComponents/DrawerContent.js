@@ -1,6 +1,6 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer'
-import { Image, StyleSheet, View,ToastAndroid } from 'react-native'
+import { Image, StyleSheet, View, ToastAndroid } from 'react-native'
 import { Avatar, Caption, Drawer, Title } from 'react-native-paper'
 import { Icon } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,44 +13,44 @@ const DrawerContent = (props) => {
     const { userInfo } = user
     const dispatch = useDispatch()
 
-    const logout=()=>{
+    const logout = () => {
         dispatch(userLogout())
     }
     return (
         <View style={{ flex: 1 }}>
             <DrawerContentScrollView {...props} >
                 <View style={styles.drawerHeader}>
-                    <View> 
+                    <View>
                         <Image
-                        source={require("../../assets/images/logo-png.png")}
-                        style={styles.logo}
+                            source={require("../../assets/images/logo-png.png")}
+                            style={styles.logo}
                         />
                     </View>
                     {
                         userInfo ?
-                        <View style={{ flexDirection: 'column' }}>
-                            <Title style={styles.title}>{userInfo.name}</Title>
-                            <Caption style={styles.caption}>{userInfo.email}</Caption>
-                        </View>:
-                        <></>
+                            <View style={{ flexDirection: 'column' }}>
+                                <Title style={styles.title}>{userInfo.name}</Title>
+                                <Caption style={styles.caption}>{userInfo.email}</Caption>
+                            </View> :
+                            <></>
                     }
                 </View>
 
                 <Drawer.Section>
                     {
                         userInfo ?
-                        <DrawerItem
-                            icon={() => (
-                                <Icon
-                                    name="account-circle" color='#114B5F'
-                                />
-                            )}
-                            label="Profile" inactiveTintColor='#114B5F'
-                            onPress={() => { props.navigation.navigate("Profile") }}
-                        />:
-                        <></>
+                            <DrawerItem
+                                icon={() => (
+                                    <Icon
+                                        name="account-circle" color='#114B5F'
+                                    />
+                                )}
+                                label="Profile" inactiveTintColor='#114B5F'
+                                onPress={() => { props.navigation.navigate("Profile") }}
+                            /> :
+                            <></>
                     }
-                    
+
                     <DrawerItem
                         icon={() => (
                             <Icon
@@ -71,38 +71,48 @@ const DrawerContent = (props) => {
                     />
                     {
                         userInfo ?
-                        <></>:
-                        <DrawerItem
-                            icon={() => (
-                                <Icon
-                                    name="login" color='#114B5F'
+                            <>
+                                <DrawerItem
+                                    icon={() => (
+                                        <Icon
+                                            name="directions-bus" color='#114B5F'
+                                        />
+                                    )}
+                                    label="My Trips" inactiveTintColor='#114B5F'
+                                    onPress={() => { props.navigation.navigate("MyTrips") }}
                                 />
-                            )}
-                            label="Login/Sign Up" inactiveTintColor='#114B5F'
-                            onPress={() => { props.navigation.navigate("Authenticate",{screen:'Authenticate'}) }}
-                        />
+                            </> :
+                            <DrawerItem
+                                icon={() => (
+                                    <Icon
+                                        name="login" color='#114B5F'
+                                    />
+                                )}
+                                label="Login/Sign Up" inactiveTintColor='#114B5F'
+                                onPress={() => { props.navigation.navigate("Authenticate", { screen: 'Authenticate' }) }}
+                            />
                     }
                 </Drawer.Section>
             </DrawerContentScrollView>
             {
-                userInfo ? 
-                <Drawer.Section style={styles.bottomDrawerSection} >
-                    
-                    <DrawerItem
-                        icon={() => (
-                            <Icon name='settings' color='#114B5F' />
-                        )}
-                        label="Settings" inactiveTintColor='#114B5F'
-                        onPress={() => {props.navigation.navigate("Settings")}}
-                    />
-                    <DrawerItem
-                        icon={() => (
-                            <Icon name='logout' color='#114B5F' />
-                        )}
-                        label="Log out" inactiveTintColor='#114B5F'
-                        onPress={logout}
-                    />
-                </Drawer.Section> : <></>
+                userInfo ?
+                    <Drawer.Section style={styles.bottomDrawerSection} >
+
+                        <DrawerItem
+                            icon={() => (
+                                <Icon name='settings' color='#114B5F' />
+                            )}
+                            label="Settings" inactiveTintColor='#114B5F'
+                            onPress={() => { props.navigation.navigate("Settings") }}
+                        />
+                        <DrawerItem
+                            icon={() => (
+                                <Icon name='logout' color='#114B5F' />
+                            )}
+                            label="Log out" inactiveTintColor='#114B5F'
+                            onPress={logout}
+                        />
+                    </Drawer.Section> : <></>
 
             }
         </View>

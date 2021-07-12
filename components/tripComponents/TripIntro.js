@@ -3,6 +3,7 @@ import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native'
 import { Button, Card, Image, Rating } from 'react-native-elements'
 import { useSelector } from 'react-redux'
 import { imagePath } from '../supportComponents/axios'
+import HTML from "react-native-render-html";
 
 const TripIntro = ({ trip, navigation, loading }) => {
     const [startDay, setStartDay] = useState(trip.start_date.substring(8, 10))
@@ -98,7 +99,7 @@ const TripIntro = ({ trip, navigation, loading }) => {
     const userInfo = useSelector(state => state.user.userInfo)
 
     const proceedToBooking = () => {
-        if(userInfo) {
+        if (userInfo) {
             navigation.navigate('BookingForm')
         } else {
             navigation.navigate('Authenticate')
@@ -126,7 +127,7 @@ const TripIntro = ({ trip, navigation, loading }) => {
 
             <Text style={styles.heading}>Description</Text>
             <View >
-                <Text style={styles.intro}>{trip.description}</Text>
+                <HTML source={{ html: trip.description }} baseFontStyle={styles.intro} />
             </View>
 
         </View>

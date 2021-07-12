@@ -2,15 +2,15 @@ import React, { useState } from 'react'
 import { View, useWindowDimensions, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import HTML from "react-native-render-html";
-
+import { ScrollView } from 'react-native';
 
 const TabDetails = ({ trip }) => {
 
     //   Trip Detail Content Render
     const attractionsView = () => (
-        <View style={styles.tabContent}>
+        <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
             <HTML source={{ html: trip.attractions }} baseFontStyle={styles.contentText} />
-        </View>
+        </ScrollView>
     );
 
     const servicesView = () => (
@@ -86,7 +86,8 @@ const TabDetails = ({ trip }) => {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        height: 300,
+        flex: 1,
+        height: 320,
         marginTop: 15,
         backgroundColor: 'white',
         borderRadius: 10,
