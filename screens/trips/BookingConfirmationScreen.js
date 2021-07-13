@@ -126,9 +126,16 @@ const BookingConfirmationScreen = ({ navigation }) => {
                 </View>
             </View>
 
-            <Button title={'Confirm Booking'} onPress={confirmBooking}
-                containerStyle={styles.confirmBtnCont} buttonStyle={styles.confirmBtn}
-                loading={false} />
+            {!loading ? (
+                <Button title={'Confirm Booking'} onPress={confirmBooking}
+                    containerStyle={styles.confirmBtnCont} buttonStyle={styles.confirmBtn}
+                    loading={false} />
+            ) : (
+                <Button title={'Confirm Booking'}
+                    containerStyle={styles.confirmBtnCont} buttonStyle={styles.confirmBtn}
+                    loading={true} />
+            )}
+
 
         </View>
     )

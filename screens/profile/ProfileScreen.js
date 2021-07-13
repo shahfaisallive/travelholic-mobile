@@ -3,39 +3,55 @@ import { ScrollView, Text, View, StyleSheet, Image } from 'react-native'
 import { Button } from 'react-native-elements'
 import { useSelector } from 'react-redux'
 import axios, { imagePath } from "../../components/supportComponents/axios"
+// import { launchImageLibrary } from 'react-native-image-picker';
 
-const ProfileScreen = ({navigation}) => {
 
-	const [name,setName] = useState(" ")
-	const [email,setEmail] = useState(" ")
-	const [mobile_num,setNumber] = useState(" ")
-	const [gender,setGender] = useState(" ")
-	const [imageName,setImageName]=useState('default.jpg')
+const ProfileScreen = ({ navigation }) => {
 
-    useEffect(()=>{
+    const [name, setName] = useState(" ")
+    const [email, setEmail] = useState(" ")
+    const [mobile_num, setNumber] = useState(" ")
+    const [gender, setGender] = useState(" ")
+    const [imageName, setImageName] = useState('default.jpg')
+    const [photo, setPhoto] = React.useState(null);
+
+    useEffect(() => {
         axios.get(`/users/${userInfo._id}`)
-		.then((res)=>{
-			setName(res.data.name)
-			setEmail(res.data.email)
-			setNumber(res.data.mobile_num)
-			if (res.data.gender){
-				setGender(res.data.gender)
-			}
-			setImageName(res.data.display_image_name)
-		
-		// //setImagePath(res.data.display_image_path)
-	}).catch((err)=>{
-		console.log(err)
-	});
-    },[])
+            .then((res) => {
+                setName(res.data.name)
+                setEmail(res.data.email)
+                setNumber(res.data.mobile_num)
+                if (res.data.gender) {
+                    setGender(res.data.gender)
+                }
+                setImageName(res.data.display_image_name)
+
+                // //setImagePath(res.data.display_image_path)
+            }).catch((err) => {
+                console.log(err)
+            });
+    }, [])
 
     const userInfo = useSelector(state => state.user.userInfo)
+
+    // const handleChoosePhoto = () => {
+    //     launchImageLibrary({ noData: true }, (response) => {
+    //         // console.log(response);
+    //         if (response) {
+    //           setPhoto(response);
+    //         }
+    //       });
+    // }
 
     return (
         <ScrollView style={styles.container}>
             <View style={styles.imageView}>
-                <Image source={{uri:`${imagePath}/users/${imageName}`}} accessibilityLabel={'Profile Image'} style={styles.image} />
+                <Image source={{ uri: `${imagePath}/users/${imageName}` }} accessibilityLabel={'Profile Image'} style={styles.image} />
+                {/* <View>
+                    <Button title='Change Photo' onPress={(handleChoosePhoto)} buttonStyle={styles.changePhotoBtn} />
+                </View> */}
             </View>
+
 
             <View style={styles.userInfoView}>
                 <View style={styles.infoViewBox}>
@@ -51,12 +67,12 @@ const ProfileScreen = ({navigation}) => {
                     <Text style={styles.userInfoText}>{mobile_num}</Text>
                 </View>
                 {
-                    gender =='' ?
-                    <View style={styles.infoViewBox}>
-                        <Text style={styles.userInfoHeading}>Gender: </Text>
-                        <Text style={styles.userInfoText}>{gender}</Text>
-                    </View>:
-                    <></>
+                    gender == '' ?
+                        <View style={styles.infoViewBox}>
+                            <Text style={styles.userInfoHeading}>Gender: </Text>
+                            <Text style={styles.userInfoText}>{gender}</Text>
+                        </View> :
+                        <></>
                 }
                 <Button title='Update Profile' onPress={() => navigation.navigate('UpdateProfile')} buttonStyle={styles.updateBtn} />
             </View>
@@ -93,6 +109,10 @@ const styles = StyleSheet.create({
     updateBtn: {
         backgroundColor: '#114B5F',
         marginTop: 15
+    },
+    changePhotoBtn: {
+        backgroundColor: '#1A936F',
+        marginTop: 10
     },
     userInfoView: {
         marginHorizontal: 10,
