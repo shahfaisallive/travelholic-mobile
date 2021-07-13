@@ -7,6 +7,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { cancelBooking, getBookedTrip, savePaymentMethod } from '../../store/actions/tripActions'
 import { CANCEL_BOOKING_RESET } from '../../store/constants/tripConstants'
 
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
 const BookingStatusScreen = ({ route }) => {
     const bookingID = route.params.bookingID
 
@@ -44,6 +48,8 @@ const BookingStatusScreen = ({ route }) => {
             dispatch({ type: CANCEL_BOOKING_RESET })
         }
         setModalVisible(false)
+
+        wait(2000).then(dispatch(getBookedTrip(bookingID)))
     }
 
     const handleCancelBtn = () => {

@@ -34,11 +34,20 @@ const AnswerCard = ({ itemData, id, loggedInUser, answerUserID }) => {
         <TouchableOpacity onLongPress={deleteAnswerHandler}>
             <View style={styles.answerView}>
                 <View style={styles.answerProfileImageView}>
-                    <Image source={{ uri: `${imagePath}/users/${itemData.item.user.display_image_name}` }} style={styles.answerProfileImage} />
+                    {itemData.item.user ? (
+                        <Image source={{ uri: `${imagePath}/users/${itemData.item.user.display_image_name}` }} style={styles.answerProfileImage} />
+                    ) : (
+                        <Image source={{ uri: `https://lh3.googleusercontent.com/proxy/78s_TWVthGsakb2bF4bt3kwjJdyaRK4GjWLLlOacD_1dotJqhgmhWukQzvZ3ScRzqRkIFnUrgIZNfX9cx83wHAtHoAZjl1rOVs4v81wv8Pavaj57RUOwkFXi` }} style={styles.answerProfileImage} />
+                    )}
+
                 </View>
 
                 <View style={styles.answerInfoView}>
-                    <Text style={styles.text2}>{itemData.item.user.name}</Text>
+                    {itemData.item.user ? (
+                        <Text style={styles.text2}>{itemData.item.user.name}</Text>
+                    ) : (
+                        <Text style={styles.text2}>User</Text>
+                    )}
                     <Text>{itemData.item.text}</Text>
                     <Text style={styles.dateText}>{`Posted: ${itemData.item.createdAt.substring(0, 10)}`}</Text>
                 </View>
