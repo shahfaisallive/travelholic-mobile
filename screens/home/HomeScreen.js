@@ -9,9 +9,11 @@ import SearchBar from '../../components/supportComponents/SearchBar';
 
 const HomeScreen = ({ navigation }) => {
     const [images, setImages] = useState([
-        require('../../assets/images/slider3.jpg'),
-        require('../../assets/images/slider2.jpg'),
-        require('../../assets/images/slider1.jpg')
+        require('../../assets/images/banner4.jpg'),
+        require('../../assets/images/banner2.jpg'),
+        require('../../assets/images/banner1.jpg'),
+        require('../../assets/images/banner3.jpg'),
+        require('../../assets/images/banner5.jpg')
     ])
     return (
         <ScrollView style={{ flex: 1 }}>

@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import axios, { imagePath } from "../../components/supportComponents/axios"
-import { ScrollView, Text, View, StyleSheet, Image, ActivityIndicator, FlatList, TextInput } from 'react-native'
+import { Text, View, StyleSheet, Image, ActivityIndicator, FlatList, TextInput } from 'react-native'
 import { Divider, Button } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { Alert } from 'react-native';
 import AnswerCard from '../../components/forumComponents/AnswerCard';
 
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
 const QuestionDetailsScreen = ({ route }) => {
-    const [refreshPage, setRefreshPage] = useState("");
 
     const questionID = route.params.questionID
     const [question, setQuestion] = useState({})
@@ -46,6 +49,20 @@ const QuestionDetailsScreen = ({ route }) => {
         }
     }, [])
 
+    const getAnswers = () => {
+        setLoading(true)
+        axios.get(`answers/questions/${questionID}`)
+            .then(res => {
+                // console.log('answers', res.data)
+                setAnswers(res.data);
+                setLoading(false)
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoading(false)
+            });
+    }
+
     const submitAnswerHandler = () => {
         if (answerText !== '') {
             if (userInfo) {
@@ -58,7 +75,6 @@ const QuestionDetailsScreen = ({ route }) => {
                             "Answer posted successfuly!"
                         )
                         setSubmitLoader(false)
-                        setRefreshPage('refresh')
                     })
             } else {
                 Alert.alert(
@@ -74,69 +90,81 @@ const QuestionDetailsScreen = ({ route }) => {
             );
         }
 
+        wait(2000).then(getAnswers)
     }
 
-
     return (loading ? (<ActivityIndicator size='large' color='#1A936F' style={{ marginTop: 260 }} />) : (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
+            {/* Answers Below */}
+            <FlatList
+                ListHeaderComponent={
+                    <>
+                        {/* Question View */}
+                        <View style={{ flexDirection: 'column' }}>
+                            <View style={styles.singleQuestionView}>
+                                {question.user ? (
+                                    <View style={styles.profileImageView}>
+                                        <Image source={{ uri: `${imagePath}/users/${question.user.display_image_name}` }} style={styles.profileImage} />
+                                    </View>
+                                ) : <View style={styles.profileImageView}>
+                                    <Image source={{ uri: `https://lh3.googleusercontent.com/proxy/78s_TWVthGsakb2bF4bt3kwjJdyaRK4GjWLLlOacD_1dotJqhgmhWukQzvZ3ScRzqRkIFnUrgIZNfX9cx83wHAtHoAZjl1rOVs4v81wv8Pavaj57RUOwkFXi` }} style={styles.profileImage} />
+                                </View>
+                                }
 
-            {/* Question View */}
-            <View style={{ flexDirection: 'column' }}>
-                <View style={styles.singleQuestionView}>
-                    {question.user ? (
-                        <View style={styles.profileImageView}>
-                            <Image source={{ uri: `${imagePath}/users/${question.user.display_image_name}` }} style={styles.profileImage} />
+                                <View style={styles.questionInfoView}>
+                                    {question.user ? (
+                                        <Text style={styles.text2}>{question.user.name}</Text>
+                                    ) : <Text style={styles.text2}>User</Text>}
+                                    <Text style={styles.text1}>{question.statement}</Text>
+                                    <Text>{question.description}</Text>
+                                    {question.createdAt ? (
+                                        <Text style={styles.dateText}>{`Posted: ${question.createdAt.substring(0, 10)}`}</Text>
+                                    ) : null}
+                                </View>
+                            </View>
                         </View>
-                    ) : null}
-
-                    <View style={styles.questionInfoView}>
-                        {question.user ? (
-                            <Text style={styles.text2}>{question.user.name}</Text>
-                        ) : null}
-                        <Text style={styles.text1}>{question.statement}</Text>
-                        <Text>{question.description}</Text>
-                        {question.createdAt ? (
-                            <Text style={styles.dateText}>{`Posted: ${question.createdAt.substring(0, 10)}`}</Text>
-                        ) : null}
-                    </View>
-                </View>
-            </View>
-            <Divider />
-
-            <View style={{ marginBottom: 10 }}>
-                {/* Answers Below */}
-                <FlatList
-                    showsVerticalScrollIndicator={false}
-                    data={answers}
-                    keyExtractor={item => item._id}
-                    initialNumToRender={4}
-                    renderItem={itemData => (
-                        <AnswerCard itemData={itemData} id={itemData.item._id}
-                            answerUserID={itemData.item.user._id} loggedInUser={userInfo._id} />
-                    )}
-                />
-            </View>
-
-            <Divider />
-
-            {/* Answer Question Form */}
-            <Text style={styles.heading}>Answer this Question</Text>
-            <View style={styles.answerFormView}>
-                <TextInput
-                    style={styles.textInput} value={answerText}
-                    onChangeText={answerText => setAnswerText(answerText)}
-                    multiline={true} numberOfLines={6} placeholder='Type your answer...'
-                />
-
-                {!submitLoader ? (
-                    <Button title={'SUBMIT ANSWER'} onPress={submitAnswerHandler}
-                        containerStyle={styles.btnCont} buttonStyle={styles.btn}
-                    />
-                ) : (
-                    <ActivityIndicator style={styles.btnCont} size="large" color="#1A936F" />
+                        <Divider />
+                    </>
+                }
+                showsVerticalScrollIndicator={false}
+                data={answers}
+                keyExtractor={item => item._id}
+                initialNumToRender={4}
+                renderItem={itemData => (
+                    <>
+                        {itemData.item.user ? (
+                            <AnswerCard itemData={itemData} id={itemData.item._id}
+                                answerUserID={itemData.item.user._id} loggedInUser={userInfo._id} />
+                        ) : (
+                            <AnswerCard itemData={itemData} id={itemData.item._id}
+                                answerUserID={'noUserId123'} loggedInUser={userInfo._id} />
+                        )}
+                    </>
                 )}
-            </View>
-        </ScrollView>
+                ListFooterComponent={
+                    <>
+                        <Divider />
+                        {/* Answer Question Form */}
+                        <Text style={styles.heading}>Answer this Question</Text>
+                        <View style={styles.answerFormView}>
+                            <TextInput
+                                style={styles.textInput} value={answerText}
+                                onChangeText={answerText => setAnswerText(answerText)}
+                                multiline={true} numberOfLines={6} placeholder='Type your answer...'
+                            />
+
+                            {!submitLoader ? (
+                                <Button title={'SUBMIT ANSWER'} onPress={submitAnswerHandler}
+                                    containerStyle={styles.btnCont} buttonStyle={styles.btn}
+                                />
+                            ) : (
+                                <ActivityIndicator style={styles.btnCont} size="large" color="#1A936F" />
+                            )}
+                        </View>
+                    </>
+                }
+            />
+        </View>
     ))
 }
 
